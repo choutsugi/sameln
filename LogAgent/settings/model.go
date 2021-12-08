@@ -1,6 +1,6 @@
 package settings
 
-type config struct {
+type ConfigType struct {
 	App    *app    `mapstructure:"app"`
 	Log    *log    `mapstructure:"log"`
 	Etcd   *etcd   `mapstructure:"etcd"`

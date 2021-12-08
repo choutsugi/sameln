@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	Config = new(config)
+	Config = new(ConfigType)
 )
 
 // Init /* 配置模块初始化：从文件读取配置信息并赋值于settings.Config
