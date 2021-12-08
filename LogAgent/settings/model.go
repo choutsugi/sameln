@@ -1,12 +1,12 @@
 package settings
 
 type ConfigType struct {
-	App    *app      `mapstructure:"app"`
-	Log    *log      `mapstructure:"log"`
-	Etcd   *etcd     `mapstructure:"etcd"`
-	Kafaka *kafka    `mapstructure:"kafka"`
-	Nsq    *nsq      `mapstructure:"nsq"`
-	Influx *influxDB `mapstructure:"influxDB"`
+	App      *app      `mapstructure:"app"`
+	Log      *log      `mapstructure:"log"`
+	Etcd     *etcd     `mapstructure:"etcd"`
+	Kafaka   *kafka    `mapstructure:"kafka"`
+	Nsq      *nsq      `mapstructure:"nsq"`
+	InfluxDB *influxDB `mapstructure:"influxDB"`
 }
 
 type app struct {
