@@ -5,6 +5,7 @@ app:
 
 log:
   level: "debug"
+  type: "console"
   filename: "log_agent.log"
   max_size: 200
   max_age: 30

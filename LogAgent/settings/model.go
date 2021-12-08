@@ -1,12 +1,12 @@
 package settings
 
 type ConfigType struct {
-	App    *app    `mapstructure:"app"`
-	Log    *log    `mapstructure:"log"`
-	Etcd   *etcd   `mapstructure:"etcd"`
-	Kafaka *kafka  `mapstructure:"kafka"`
-	Nsq    *nsq    `mapstructure:"nsq"`
-	Influx *influx `mapstructure:"influx"`
+	App    *app      `mapstructure:"app"`
+	Log    *log      `mapstructure:"log"`
+	Etcd   *etcd     `mapstructure:"etcd"`
+	Kafaka *kafka    `mapstructure:"kafka"`
+	Nsq    *nsq      `mapstructure:"nsq"`
+	Influx *influxDB `mapstructure:"influxDB"`
 }
 
 type app struct {
@@ -17,6 +17,7 @@ type app struct {
 
 type log struct {
 	Level      string `mapstructure:"level"`
+	Type       string `mapstructure:"type"`
 	FileName   string `mapstructure:"filename"`
 	MaxSize    int    `mapstructure:"max_size"`
 	MaxAge     int    `mapstructure:"max_age"`
@@ -43,7 +44,7 @@ type nsq struct {
 	ChanSize int    `mapstructure:"chan_size"`
 }
 
-type influx struct {
+type influxDB struct {
 	Addr      string `mapstructure:"addr"`
 	Port      int    `mapstructure:"port"`
 	Username  string `mapstructure:"username"`
