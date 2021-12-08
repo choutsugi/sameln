@@ -1,0 +1,36 @@
+app:
+  name: "log_agent"
+  mode: "dev"
+  version: "v1.0.0"
+
+log:
+  level: "debug"
+  filename: "log_agent.log"
+  max_size: 200
+  max_age: 30
+  max_backups: 7
+
+etcd:
+  addr: "127.0.0.1"
+  port: 2379
+  collect_key: "collect_log_%s_conf"
+
+kafka:
+  addr: "127.0.0.1"
+  port: 9092
+  topic: "web_log"
+  chan_size: 100000
+
+nsq:
+  addr: "127.0.0.1"
+  port: 4160
+  topic: "web_log"
+  chan_size: 100000
+
+influx:
+  addr: "127.0.0.1"
+  port: 8086
+  username: "admin"
+  password: "123456"
+  database: "system_status"
+  precision: "s"
