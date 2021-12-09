@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"LogAgent/blunder"
 	"LogAgent/settings"
 	"os"
 
@@ -10,23 +11,23 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func Init(config *settings.ConfigType) (err error) {
+func Init(config *settings.LogConfigType, mode string) *blunder.Error {
 
 	writer := newWriter(
-		config.Log.FileName,
-		config.Log.MaxSize,
-		config.Log.MaxAge,
-		config.Log.MaxBackups,
+		config.FileName,
+		config.MaxSize,
+		config.MaxAge,
+		config.MaxBackups,
 	)
 
-	encoder := newEncoder(config.Log.Type)
+	encoder := newEncoder(config.Type)
 	level := new(zapcore.Level)
-	if err = level.UnmarshalText([]byte(config.Log.Level)); err != nil {
-		return err
+	if err := level.UnmarshalText([]byte(config.Level)); err != nil {
+		return blunder.NewError(blunder.CodeSysLoggerInitFailed, err)
 	}
 
 	var core zapcore.Core
-	if config.App.Mode == appModeDev {
+	if mode == loggerModeDevelop {
 		consoleEncoder := zapcore.NewConsoleEncoder(zap.NewDevelopmentEncoderConfig())
 		// 同时输出到日志文件和终端
 		core = zapcore.NewTee(
@@ -40,7 +41,7 @@ func Init(config *settings.ConfigType) (err error) {
 	logger := zap.New(core, zap.AddCaller())
 	// 替换zap包中全局的logger实例
 	zap.ReplaceGlobals(logger)
-	return nil
+	return blunder.NewSuccess(blunder.CodeSysLoggerInitSucceed)
 }
 
 func Sync() {

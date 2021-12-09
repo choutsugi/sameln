@@ -1,21 +1,21 @@
 package settings
 
 type ConfigType struct {
-	App      *app      `mapstructure:"app"`
-	Log      *log      `mapstructure:"log"`
-	Etcd     *etcd     `mapstructure:"etcd"`
-	Kafaka   *kafka    `mapstructure:"kafka"`
-	Nsq      *nsq      `mapstructure:"nsq"`
-	InfluxDB *influxDB `mapstructure:"influxDB"`
+	App      *AppConfigType      `mapstructure:"app"`
+	Log      *LogConfigType      `mapstructure:"log"`
+	Etcd     *EtcdConfigType     `mapstructure:"etcd"`
+	Kafaka   *KafkaConfigType    `mapstructure:"kafka"`
+	Nsq      *NsqConfigType      `mapstructure:"nsq"`
+	InfluxDB *InfluxDbConfigType `mapstructure:"influxDB"`
 }
 
-type app struct {
+type AppConfigType struct {
 	Name    string `mapstructure:"name"`
 	Mode    string `mapstructure:"mode"`
 	Version string `mapstructure:"version"`
 }
 
-type log struct {
+type LogConfigType struct {
 	Level      string `mapstructure:"level"`
 	Type       string `mapstructure:"type"`
 	FileName   string `mapstructure:"filename"`
@@ -24,27 +24,27 @@ type log struct {
 	MaxBackups int    `mapstructure:"max_backups"`
 }
 
-type etcd struct {
+type EtcdConfigType struct {
 	Addr       string `mapstructure:"addr"`
 	Port       int    `mapstructure:"port"`
 	CollectKey string `mapstructure:"collect_key"`
 }
 
-type kafka struct {
+type KafkaConfigType struct {
 	Addr     string `mapstructure:"addr"`
 	Port     int    `mapstructure:"port"`
 	Topic    string `mapstructure:"topic"`
 	ChanSize int    `mapstructure:"chan_size"`
 }
 
-type nsq struct {
+type NsqConfigType struct {
 	Addr     string `mapstructure:"addr"`
 	Port     int    `mapstructure:"port"`
 	Topic    string `mapstructure:"topic"`
 	ChanSize int    `mapstructure:"chan_size"`
 }
 
-type influxDB struct {
+type InfluxDbConfigType struct {
 	Addr      string `mapstructure:"addr"`
 	Port      int    `mapstructure:"port"`
 	Username  string `mapstructure:"username"`

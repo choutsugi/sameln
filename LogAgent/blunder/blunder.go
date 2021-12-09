@@ -1,18 +1,33 @@
 package blunder
 
-func New(code uint64, err error) *Errors {
-	return &Errors{
-		Code: code,
-		Msg:  blunderMsg[code],
-		Err:  err,
+var (
+	success = &Error{
+		State: StatusSuccess,
+		Code:  CodeSysSuccess,
+		Msg:   blunderMsg[CodeSysSuccess],
+		Err:   nil,
+	}
+)
+
+func NewError(code uint64, err error) *Error {
+	return &Error{
+		State: StatusFailed,
+		Code:  code,
+		Msg:   blunderMsg[code],
+		Err:   err,
 	}
 }
 
-func NewWithSuccess() *Errors {
-	return &Errors{
-		Code: CODE_SUCCESS,
-		Msg:  blunderMsg[CODE_SUCCESS],
-		Err:  nil,
+func Success() *Error {
+	return success
+}
+
+func NewSuccess(code uint64) *Error {
+	return &Error{
+		State: StatusSuccess,
+		Code:  code,
+		Msg:   blunderMsg[code],
+		Err:   nil,
 	}
 }
 

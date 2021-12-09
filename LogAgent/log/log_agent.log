@@ -3,3 +3,6 @@
 2021-12-09T00:32:04.949+0800	DEBUG	LogAgent/main.go:24	success!
 2021-12-09T00:32:09.883+0800	DEBUG	LogAgent/main.go:24	success!
 2021-12-09T00:33:53.409+0800	DEBUG	LogAgent/main.go:24	success!
+2021-12-09T16:54:49.536+0800	DEBUG	LogAgent/main.go:40	日志模块初始化成功
+2021-12-09T16:57:28.195+0800	DEBUG	LogAgent/main.go:41	日志模块初始化成功
+2021-12-09T16:57:36.579+0800	DEBUG	LogAgent/main.go:41	日志模块初始化成功

@@ -6,5 +6,6 @@ const (
 )
 
 const (
-	appModeDev = "dev"
+	loggerModeDevelop = "dev"
+	loggerModeRelease = "release"
 )
