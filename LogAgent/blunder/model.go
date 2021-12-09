@@ -9,6 +9,7 @@ const (
 	CodeSysSuccess = iota + 10000
 	CodeSysSettingsInitSucceed
 	CodeSysLoggerInitSucceed
+	CodeSysKafkaInitSucceed
 
 	CodeSysUnknownAppMode
 	CodeSysSettingsInitFailed
@@ -28,6 +29,7 @@ const (
 
 const (
 	CodeKafkaConnFailed = iota + 40000
+	CodeKafkaSendSucceed
 	CodeKafkaSendFailed
 )
 
@@ -48,6 +50,7 @@ var blunderMsg = map[uint64]string{
 	CodeSysSuccess:             "成功",
 	CodeSysSettingsInitSucceed: "配置模块初始化成功",
 	CodeSysLoggerInitSucceed:   "日志模块初始化成功",
+	CodeSysKafkaInitSucceed:    "Kafka模块初始化失败",
 
 	CodeSysSettingsInitFailed:    "配置模块初始化失败",
 	CodeSysUnknownAppMode:        "未识别的应用启动模式，使用默认值：dev",
@@ -62,8 +65,9 @@ var blunderMsg = map[uint64]string{
 	CodeEtcdConfUnmarshalFailed: "Etcd解析数据失败",
 	CodeEtcdConfUpdated:         "Etcd数据已更新",
 
-	CodeKafkaConnFailed: "Kafka连接失败",
-	CodeKafkaSendFailed: "Kafka发送失败",
+	CodeKafkaConnFailed:  "Kafka连接失败",
+	CodeKafkaSendSucceed: "Kafka发送成功",
+	CodeKafkaSendFailed:  "Kafka发送失败",
 
 	CodeNsqCreateProducerFailed: "Nsq创建实例失败",
 	CodeNsqPublishFailed:        "Nsq发布消息失败",
