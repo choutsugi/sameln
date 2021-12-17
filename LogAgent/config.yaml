@@ -1,11 +1,11 @@
 app:
   name: "log_agent"
-  mode: "dev"
+  mode: "develop"
   version: "v1.0.0"
 
 log:
   level: "debug"
-  type: "console"
+  type: "json"
   filename: "./log/log_agent.log"
   max_size: 200
   max_age: 30

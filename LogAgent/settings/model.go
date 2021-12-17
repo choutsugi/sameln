@@ -52,3 +52,8 @@ type InfluxDbConfigType struct {
 	Database  string `mapstructure:"database"`
 	Precision string `mapstructure:"precision"`
 }
+
+const (
+	ModeRelease = "release"
+	ModeDevelop = "develop"
+)

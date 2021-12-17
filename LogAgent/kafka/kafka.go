@@ -12,7 +12,7 @@ var (
 	msgChan chan *sarama.ProducerMessage
 )
 
-func Init(address []string, chanSize int64) *blunder.Error {
+func Init(address []string, chanSize int64) *error.Error {
 	// 1.生产者配置
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
@@ -22,7 +22,8 @@ func Init(address []string, chanSize int64) *blunder.Error {
 	var err error
 	// 2.连接kafka
 	if client, err = sarama.NewSyncProducer(address, config); err != nil {
-		return blunder.NewError(blunder.CodeKafkaConnFailed, err)
+		zap.L().Fatal(error.GetMsg(error.CodeKafkaConnFailed))
+		return error.NewError(error.CodeKafkaConnFailed, err)
 	}
 
 	// 3.初始化MsgChan
@@ -31,7 +32,7 @@ func Init(address []string, chanSize int64) *blunder.Error {
 	// 4.启动后台goroutine用于发送
 	go sendMsg()
 
-	return blunder.NewSuccess(blunder.CodeSysKafkaInitSucceed)
+	return error.NewSuccess(error.CodeSysKafkaInitSucceed)
 }
 
 func sendMsg() {
@@ -40,10 +41,10 @@ func sendMsg() {
 		case msg := <-msgChan:
 			pid, offset, err := client.SendMessage(msg)
 			if err != nil {
-				zap.L().Warn(blunder.GetMsg(blunder.CodeKafkaSendFailed))
+				zap.L().Warn(error.GetMsg(error.CodeKafkaSendFailed))
 			}
 			zap.L().Debug(
-				blunder.GetMsg(blunder.CodeKafkaSendSucceed),
+				error.GetMsg(error.CodeKafkaSendSucceed),
 				zapcore.Field{Key: "pid", Interface: pid},
 				zapcore.Field{Key: "offset", Interface: offset},
 			)

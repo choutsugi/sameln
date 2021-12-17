@@ -6,3 +6,9 @@
 2021-12-09T16:54:49.536+0800	DEBUG	LogAgent/main.go:40	日志模块初始化成功
 2021-12-09T16:57:28.195+0800	DEBUG	LogAgent/main.go:41	日志模块初始化成功
 2021-12-09T16:57:36.579+0800	DEBUG	LogAgent/main.go:41	日志模块初始化成功
+2021-12-10T09:58:05.202+0800	INFO	LogAgent/main.go:41	日志模块初始化成功%!(EXTRA string=hello)
+2021-12-10T09:58:24.766+0800	INFO	LogAgent/main.go:41	日志模块初始化成功hello
+2021-12-10T10:00:19.439+0800	INFO	LogAgent/main.go:41	Msg:日志模块初始化成功, Info: hello
+2021-12-10T10:03:46.970+0800	INFO	LogAgent/main.go:42	Msg:日志模块初始化成功 {info 0 0  hello}
+{"level":"INFO","time":"2021-12-10T10:05:07.073+0800","caller":"LogAgent/main.go:41","msg":"he"}
+{"level":"INFO","time":"2021-12-10T10:06:45.546+0800","caller":"LogAgent/main.go:41","msg":"he"}
