@@ -1,6 +1,7 @@
 package logger
 
 import (
+	"LogAgent/common/record"
 	"LogAgent/error"
 	"LogAgent/settings"
 	"os"
@@ -12,7 +13,8 @@ import (
 )
 
 var (
-	Log *zap.SugaredLogger
+	L             *zap.SugaredLogger
+	IsInitialized bool
 )
 
 func Init(config *settings.LogConfigType, mode string) *error.Error {
@@ -27,6 +29,7 @@ func Init(config *settings.LogConfigType, mode string) *error.Error {
 	encoder := newEncoder(config.Type)
 	level := new(zapcore.Level)
 	if err := level.UnmarshalText([]byte(config.Level)); err != nil {
+		record.Failed("日志模块解析级别配置信息失败")
 		return error.NewError(err, error.CodeSysLoggerInitFailed)
 	}
 
@@ -45,12 +48,13 @@ func Init(config *settings.LogConfigType, mode string) *error.Error {
 	logger := zap.New(core, zap.AddCaller())
 	// 替换zap包中全局的logger实例
 	zap.ReplaceGlobals(logger)
-	Log = logger.Sugar()
+	L = logger.Sugar()
+	IsInitialized = true
 	return error.Null()
 }
 
 func Sync() {
-	err := Log.Sync()
+	err := L.Sync()
 	if err != nil {
 		//TODO
 		return

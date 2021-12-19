@@ -1,7 +1,8 @@
 package kafka
 
 import (
-	"LogAgent/blunder"
+	"LogAgent/error"
+
 	"github.com/Shopify/sarama"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -19,11 +20,11 @@ func Init(address []string, chanSize int64) *error.Error {
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.Return.Successes = true
 
-	var err error
+	var err error.Raw
 	// 2.连接kafka
 	if client, err = sarama.NewSyncProducer(address, config); err != nil {
-		zap.L().Fatal(error.GetMsg(error.CodeKafkaConnFailed))
-		return error.NewError(error.CodeKafkaConnFailed, err)
+		zap.L().Fatal(error.GetInfo(error.CodeKafkaConnFailed))
+		return error.NewError(err, error.CodeKafkaConnFailed)
 	}
 
 	// 3.初始化MsgChan
@@ -32,7 +33,7 @@ func Init(address []string, chanSize int64) *error.Error {
 	// 4.启动后台goroutine用于发送
 	go sendMsg()
 
-	return error.NewSuccess(error.CodeSysKafkaInitSucceed)
+	return error.NullWithCode(error.CodeSysKafkaInitSucceed)
 }
 
 func sendMsg() {
@@ -41,10 +42,10 @@ func sendMsg() {
 		case msg := <-msgChan:
 			pid, offset, err := client.SendMessage(msg)
 			if err != nil {
-				zap.L().Warn(error.GetMsg(error.CodeKafkaSendFailed))
+				zap.L().Warn(error.GetInfo(error.CodeKafkaSendFailed))
 			}
 			zap.L().Debug(
-				error.GetMsg(error.CodeKafkaSendSucceed),
+				error.GetInfo(error.CodeKafkaSendSucceed),
 				zapcore.Field{Key: "pid", Interface: pid},
 				zapcore.Field{Key: "offset", Interface: offset},
 			)
