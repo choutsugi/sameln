@@ -1,19 +1,21 @@
 package error
 
 import (
-	"LogAgent/common/system"
 	"errors"
 	"fmt"
 	"runtime"
 	"strings"
+	"time"
 )
 
-type Raw = error
+// RawErr 原生error
+type RawErr = error
 
+// Error 自定义错误包结构
 type Error struct {
 	StatusCode uint64    // 错误码
 	Message    string    // 错误信息
-	rawErr     Raw       // 原生错误
+	rawErr     RawErr    // 原生错误
 	callStack  []uintptr // 函数调用栈指针
 }
 
@@ -139,7 +141,7 @@ func Log(err *Error) {
 func LogWithTime(err *Error) {
 	fmt.Printf("[E%d] time: %v\t info: %s\t raw_err: %s\t call stack: %s\n",
 		err.StatusCode,
-		system.LocalTime(),
+		time.Now().Local().Format("2006-01-02 15:04:05.000"),
 		err.Info(),
 		err.RawErr(),
 		err.CallStack(),

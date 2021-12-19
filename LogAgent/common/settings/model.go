@@ -34,14 +34,14 @@ type KafkaConfigType struct {
 	Addr     string `mapstructure:"addr"`
 	Port     int    `mapstructure:"port"`
 	Topic    string `mapstructure:"topic"`
-	ChanSize int    `mapstructure:"chan_size"`
+	ChanSize uint64 `mapstructure:"chan_size"`
 }
 
 type NsqConfigType struct {
 	Addr     string `mapstructure:"addr"`
 	Port     int    `mapstructure:"port"`
 	Topic    string `mapstructure:"topic"`
-	ChanSize int    `mapstructure:"chan_size"`
+	ChanSize uint64 `mapstructure:"chan_size"`
 }
 
 type InfluxDbConfigType struct {

@@ -1,11 +1,9 @@
 package kafka
 
 import (
-	"LogAgent/error"
-
+	"LogAgent/common/error"
+	"LogAgent/common/logger"
 	"github.com/Shopify/sarama"
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 var (
@@ -13,17 +11,17 @@ var (
 	msgChan chan *sarama.ProducerMessage
 )
 
-func Init(address []string, chanSize int64) *error.Error {
+func Init(address []string, chanSize uint64) *error.Error {
 	// 1.生产者配置
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.Return.Successes = true
 
-	var err error.Raw
+	var err error.RawErr
 	// 2.连接kafka
 	if client, err = sarama.NewSyncProducer(address, config); err != nil {
-		zap.L().Fatal(error.GetInfo(error.CodeKafkaConnFailed))
+		logger.L().Fatalw(error.GetInfo(error.CodeKafkaConnFailed), "err", err.Error())
 		return error.NewError(err, error.CodeKafkaConnFailed)
 	}
 
@@ -33,7 +31,11 @@ func Init(address []string, chanSize int64) *error.Error {
 	// 4.启动后台goroutine用于发送
 	go sendMsg()
 
-	return error.NullWithCode(error.CodeSysKafkaInitSucceed)
+	return error.Null()
+}
+
+func Write(msg *sarama.ProducerMessage) {
+	msgChan <- msg
 }
 
 func sendMsg() {
@@ -42,17 +44,11 @@ func sendMsg() {
 		case msg := <-msgChan:
 			pid, offset, err := client.SendMessage(msg)
 			if err != nil {
-				zap.L().Warn(error.GetInfo(error.CodeKafkaSendFailed))
+				logger.L().Warn(error.GetInfo(error.CodeKafkaConnFailed))
 			}
-			zap.L().Debug(
-				error.GetInfo(error.CodeKafkaSendSucceed),
-				zapcore.Field{Key: "pid", Interface: pid},
-				zapcore.Field{Key: "offset", Interface: offset},
+			logger.L().Debugw(
+				error.GetInfo(error.CodeKafkaSendSucceed), "pid", pid, "offset", offset,
 			)
 		}
 	}
-}
-
-func Write(msg *sarama.ProducerMessage) {
-	msgChan <- msg
 }

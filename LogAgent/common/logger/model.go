@@ -8,6 +8,6 @@ const (
 
 // 日志模式
 const (
-	modeDevelop = "dev"     // 开发
+	modeDevelop = "develop" // 开发
 	modeRelease = "release" // 发布
 )

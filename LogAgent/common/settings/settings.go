@@ -1,9 +1,9 @@
 package settings
 
 import (
-	"LogAgent/common/models"
+	"LogAgent/common/bundles"
+	"LogAgent/common/error"
 	"LogAgent/common/record"
-	"LogAgent/error"
 	"flag"
 
 	"github.com/fsnotify/fsnotify"
@@ -39,25 +39,24 @@ func Init() *error.Error {
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {
 		if err := viper.Unmarshal(Config); err != nil {
-			record.Failed("配置文件%s更新，解析失败", *filePath)
-			msg := models.FileUpdateMsg{
+			msg := bundles.FileUpdateMsg{
 				FileName:    *filePath,
 				IsUnmarshal: false,
 			}
-			models.ConfigFileUpdateChan <- msg
+			bundles.ConfigFileUpdateChan <- msg
 		} else {
-			record.Succeed("配置文件%s更新，解析成功", *filePath)
-			msg := models.FileUpdateMsg{
+			msg := bundles.FileUpdateMsg{
 				FileName:    *filePath,
 				IsUnmarshal: true,
 			}
-			models.ConfigFileUpdateChan <- msg
+			bundles.ConfigFileUpdateChan <- msg
 		}
 	})
 
 	return error.NullWithCode(error.CodeSysSettingsInitSucceed)
 }
 
+// GetGlobalMode 获取全局运行模式
 func GetGlobalMode() (mode string) {
 	switch Config.App.Mode {
 	case ModeRelease:

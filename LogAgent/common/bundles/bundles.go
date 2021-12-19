@@ -1,4 +1,4 @@
-package models
+package bundles
 
 // FileUpdateMsg 文件更新channel通信包
 type FileUpdateMsg struct {

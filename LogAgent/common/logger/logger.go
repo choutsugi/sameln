@@ -1,9 +1,9 @@
 package logger
 
 import (
+	"LogAgent/common/error"
 	"LogAgent/common/record"
-	"LogAgent/error"
-	"LogAgent/settings"
+	"LogAgent/common/settings"
 	"os"
 
 	"go.uber.org/zap"
@@ -13,10 +13,11 @@ import (
 )
 
 var (
-	L             *zap.SugaredLogger
+	log           *zap.SugaredLogger
 	IsInitialized bool
 )
 
+// Init 日志模块初始化
 func Init(config *settings.LogConfigType, mode string) *error.Error {
 
 	writer := newWriter(
@@ -48,17 +49,22 @@ func Init(config *settings.LogConfigType, mode string) *error.Error {
 	logger := zap.New(core, zap.AddCaller())
 	// 替换zap包中全局的logger实例
 	zap.ReplaceGlobals(logger)
-	L = logger.Sugar()
+	log = logger.Sugar()
 	IsInitialized = true
 	return error.Null()
 }
 
+// Sync 刷新日志缓存
 func Sync() {
-	err := L.Sync()
+	err := log.Sync()
 	if err != nil {
 		//TODO
 		return
 	}
+}
+
+func L() *zap.SugaredLogger {
+	return log
 }
 
 func newEncoder(logType string) zapcore.Encoder {

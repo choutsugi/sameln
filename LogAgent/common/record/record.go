@@ -1,8 +1,8 @@
 package record
 
 import (
+	"LogAgent/common/error"
 	"LogAgent/common/system"
-	"LogAgent/error"
 	"fmt"
 )
 
@@ -34,7 +34,7 @@ func log(stat string, args ...interface{}) {
 	fmt.Printf("TIME: %s\t %s: %s\n", system.LocalTime(), stat, info)
 }
 
-func logError(info string, err error.Raw, stack string) {
+func logError(info string, err error.RawErr, stack string) {
 	fmt.Printf("TIME: %s\t %s: %s\t RAW_ERR: %s\t CALL_STACK: %s\n", system.LocalTime(), ERROR, info, err, stack)
 }
 
