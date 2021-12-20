@@ -3,7 +3,9 @@ package kafka
 import (
 	"LogAgent/common/error"
 	"LogAgent/common/logger"
+	"fmt"
 	"github.com/Shopify/sarama"
+	"strconv"
 )
 
 var (
@@ -11,7 +13,7 @@ var (
 	msgChan chan *sarama.ProducerMessage
 )
 
-func Init(address []string, chanSize uint64) *error.Error {
+func Init(address []string, port int, chanSize uint64) *error.Error {
 	// 1.生产者配置
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
@@ -20,6 +22,9 @@ func Init(address []string, chanSize uint64) *error.Error {
 
 	var err error.RawErr
 	// 2.连接kafka
+	for i, val := range address {
+		address[i] = fmt.Sprintf("%s:%s", val, strconv.Itoa(port))
+	}
 	if client, err = sarama.NewSyncProducer(address, config); err != nil {
 		logger.L().Fatalw(error.GetInfo(error.CodeKafkaConnFailed), "err", err.Error())
 		return error.NewError(err, error.CodeKafkaConnFailed)

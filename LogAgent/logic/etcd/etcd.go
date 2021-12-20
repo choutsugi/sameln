@@ -14,19 +14,19 @@ import (
 
 var (
 	client *clientv3.Client
-	raw    error.RawErr
 )
 
-func Init(address []string) (err *error.Error) {
+func Init(address []string) *error.Error {
+	var raw error.RawErr
 	client, raw = clientv3.New(clientv3.Config{
 		Endpoints:   address,
 		DialTimeout: time.Second * 5,
 	})
-	if err != nil {
+	if raw != nil {
 		logger.L().Errorw("Etcd模块初始化失败", "err", raw.Error())
-		return
+		return error.NewError(raw, error.CodeEtcdConnectFailed)
 	}
-	return
+	return error.Null()
 }
 
 // GetConf 获取配置项

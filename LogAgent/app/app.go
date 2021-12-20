@@ -45,18 +45,19 @@ func initialize() *error.Error {
 	defer logger.Sync()
 	record.Succeed("日志模块初始化成功")
 
-	// 4.初始化链接Kafka
-	if ret = kafka.Init([]string{settings.Config.Kafaka.Addr}, settings.Config.Kafaka.ChanSize); ret != error.Null() {
+	// 4.初始化连接Kafka
+	if ret = kafka.Init([]string{settings.Config.Kafaka.Addr}, settings.Config.Kafaka.Port, settings.Config.Kafaka.ChanSize); ret != error.Null() {
 		return ret
 	}
 	logger.L().Info("Kafka模块初始化成功")
 
-	// 5.连接Etcd
+	// 5.初始化连接Etcd
 	if ret = etcd.Init([]string{settings.Config.Etcd.Addr}); ret != error.Null() {
 		return ret
 	}
 	logger.L().Info("Etcd模块初始化成功")
 	return ret
+
 }
 
 func server() {

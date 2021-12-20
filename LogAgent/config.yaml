@@ -17,7 +17,7 @@ etcd:
   collect_key: "collect_log_%s_conf"
 
 kafka:
-  addr: "127.0.0.1"
+  addr: "192.168.99.100"
   port: 9092
   topic: "web_log"
   chan_size: 100000
