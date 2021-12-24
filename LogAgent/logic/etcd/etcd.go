@@ -3,7 +3,9 @@ package etcd
 import (
 	"LogAgent/common/error"
 	"LogAgent/common/logger"
+	"LogAgent/common/settings"
 	"LogAgent/common/system"
+	"LogAgent/logic/collector"
 	"LogAgent/logic/models"
 	"context"
 	"encoding/json"
@@ -16,10 +18,10 @@ var (
 	client *clientv3.Client
 )
 
-func Init(address []string) *error.Error {
+func Init(etcdConfig *settings.EtcdConfigType) *error.Error {
 	var raw error.RawErr
 	client, raw = clientv3.New(clientv3.Config{
-		Endpoints:   address,
+		Endpoints:   []string{etcdConfig.Addr},
 		DialTimeout: time.Second * 5,
 	})
 	if raw != nil {
@@ -29,18 +31,39 @@ func Init(address []string) *error.Error {
 	return error.Null()
 }
 
+// PutConf 设置配置项
+func PutConf(key string) *error.Error {
+	// 获取IP生成Key
+	ip, err := system.LocalIP()
+	if err != error.Null() {
+		return err
+	}
+	key = fmt.Sprintf(key, ip)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)
+	defer cancel()
+	str := `[{"path":"D:/ProgramData/LogAgent/logs/s4.log","topic":"s4_log"},{"path":"D:/ProgramData/LogAgent/logs/web.log","topic":"web_log"},{"path":"D:/ProgramData/LogAgent/logs/s5.log","topic":"s5_log"}]`
+	_, raw := client.Put(ctx, key, str)
+
+	if raw != nil {
+		logger.L().Warnw(fmt.Sprintf("设置Key为%s的配置失败", key), "err", raw.Error())
+		return error.NewError(raw, error.CodeEtcdPutConfFailed)
+	}
+
+	return error.Null()
+}
+
 // GetConf 获取配置项
 func GetConf(key string) (collectEntryList []models.CollectEntry, err *error.Error) {
 	// 获取IP生成Key
 	ip, err := system.LocalIP()
-	if err != nil {
+	if err != error.Null() {
 		return
 	}
 	key = fmt.Sprintf(key, ip)
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*2)
 	defer cancel()
 	resp, raw := client.Get(ctx, key)
-	if err != nil {
+	if raw != nil {
 		logger.L().Warnw(fmt.Sprintf("读取Key为%s的配置失败", key), "err", raw.Error())
 		return
 	}
@@ -78,7 +101,7 @@ func WatchConf(key string) {
 				continue
 			}
 			// 如果配置更新则通知tailfile刷新任务
-			//tailfile.UpdateConf(newConf)
+			collector.UpdateConf(newConf)
 		}
 	}
 }

@@ -3,17 +3,19 @@ package kafka
 import (
 	"LogAgent/common/error"
 	"LogAgent/common/logger"
-	"fmt"
+	"LogAgent/common/settings"
 	"github.com/Shopify/sarama"
-	"strconv"
 )
+
+type ProducerMessage = sarama.ProducerMessage
 
 var (
 	client  sarama.SyncProducer
-	msgChan chan *sarama.ProducerMessage
+	msgChan chan *ProducerMessage
 )
 
-func Init(address []string, port int, chanSize uint64) *error.Error {
+func Init(kafkaConfig *settings.KafkaConfigType) *error.Error {
+	address := []string{kafkaConfig.Addr}
 	// 1.生产者配置
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
@@ -22,16 +24,13 @@ func Init(address []string, port int, chanSize uint64) *error.Error {
 
 	var err error.RawErr
 	// 2.连接kafka
-	for i, val := range address {
-		address[i] = fmt.Sprintf("%s:%s", val, strconv.Itoa(port))
-	}
 	if client, err = sarama.NewSyncProducer(address, config); err != nil {
 		logger.L().Fatalw(error.GetInfo(error.CodeKafkaConnFailed), "err", err.Error())
 		return error.NewError(err, error.CodeKafkaConnFailed)
 	}
 
 	// 3.初始化MsgChan
-	msgChan = make(chan *sarama.ProducerMessage, chanSize)
+	msgChan = make(chan *sarama.ProducerMessage, kafkaConfig.ChanSize)
 
 	// 4.启动后台goroutine用于发送
 	go sendMsg()
@@ -39,7 +38,7 @@ func Init(address []string, port int, chanSize uint64) *error.Error {
 	return error.Null()
 }
 
-func Write(msg *sarama.ProducerMessage) {
+func Write(msg *ProducerMessage) {
 	msgChan <- msg
 }
 
@@ -56,4 +55,14 @@ func sendMsg() {
 			)
 		}
 	}
+}
+
+type StringEncoder string
+
+func (s StringEncoder) Encode() ([]byte, error.RawErr) {
+	return []byte(s), nil
+}
+
+func (s StringEncoder) Length() int {
+	return len(s)
 }

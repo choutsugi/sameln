@@ -12,25 +12,21 @@ log:
   max_backups: 7
 
 etcd:
-  addr: "127.0.0.1"
-  port: 2379
+  addr: "192.168.99.100:2379"
   collect_key: "collect_log_%s_conf"
 
 kafka:
-  addr: "192.168.99.100"
-  port: 9092
+  addr: "192.168.99.100:9092"
   topic: "web_log"
   chan_size: 100000
 
 nsq:
-  addr: "127.0.0.1"
-  port: 4160
+  addr: "127.0.0.1:4160"
   topic: "web_log"
   chan_size: 100000
 
 influxDB:
-  addr: "127.0.0.1"
-  port: 8086
+  addr: "127.0.0.1:8086"
   username: "admin"
   password: "123456"
   database: "system_status"

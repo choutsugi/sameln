@@ -47,6 +47,10 @@ const (
 	CodeInfluxDbWriteFailed
 )
 
+const (
+	CodeTailInitTaskFailed = iota + 70000
+)
+
 var blunderMsg = map[uint64]string{
 	CodeSysSuccess:             "成功",
 	CodeSysSettingsInitSucceed: "配置模块初始化成功",
@@ -111,4 +115,6 @@ var errMsg = map[uint64]string{
 	CodeInfluxDbCreatePointFailed:  "InfluxDB创建数据点失败",
 	CodeInfluxDbQueryFailed:        "InfluxDB查询失败",
 	CodeInfluxDbWriteFailed:        "InfluxDB写入失败",
+
+	CodeTailInitTaskFailed: "Tail初始化任务失败",
 }

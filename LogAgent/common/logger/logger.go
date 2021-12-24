@@ -18,18 +18,18 @@ var (
 )
 
 // Init 日志模块初始化
-func Init(config *settings.LogConfigType, mode string) *error.Error {
+func Init(logConfig *settings.LogConfigType, mode string) *error.Error {
 
 	writer := newWriter(
-		config.FileName,
-		config.MaxSize,
-		config.MaxAge,
-		config.MaxBackups,
+		logConfig.FileName,
+		logConfig.MaxSize,
+		logConfig.MaxAge,
+		logConfig.MaxBackups,
 	)
 
-	encoder := newEncoder(config.Type)
+	encoder := newEncoder(logConfig.Type)
 	level := new(zapcore.Level)
-	if err := level.UnmarshalText([]byte(config.Level)); err != nil {
+	if err := level.UnmarshalText([]byte(logConfig.Level)); err != nil {
 		record.Failed("日志模块解析级别配置信息失败")
 		return error.NewError(err, error.CodeSysLoggerInitFailed)
 	}

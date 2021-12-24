@@ -26,27 +26,23 @@ type LogConfigType struct {
 
 type EtcdConfigType struct {
 	Addr       string `mapstructure:"addr"`
-	Port       int    `mapstructure:"port"`
 	CollectKey string `mapstructure:"collect_key"`
 }
 
 type KafkaConfigType struct {
 	Addr     string `mapstructure:"addr"`
-	Port     int    `mapstructure:"port"`
 	Topic    string `mapstructure:"topic"`
 	ChanSize uint64 `mapstructure:"chan_size"`
 }
 
 type NsqConfigType struct {
 	Addr     string `mapstructure:"addr"`
-	Port     int    `mapstructure:"port"`
 	Topic    string `mapstructure:"topic"`
 	ChanSize uint64 `mapstructure:"chan_size"`
 }
 
 type InfluxDbConfigType struct {
 	Addr      string `mapstructure:"addr"`
-	Port      int    `mapstructure:"port"`
 	Username  string `mapstructure:"username"`
 	Password  string `mapstructure:"password"`
 	Database  string `mapstructure:"database"`

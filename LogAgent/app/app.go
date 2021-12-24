@@ -5,11 +5,11 @@ import (
 	"LogAgent/common/logger"
 	"LogAgent/common/record"
 	"LogAgent/common/settings"
-	"LogAgent/common/system"
 	"LogAgent/common/watch"
+	"LogAgent/logic/collector"
 	"LogAgent/logic/etcd"
 	"LogAgent/logic/kafka"
-	"fmt"
+	"LogAgent/logic/models"
 	"time"
 )
 
@@ -46,13 +46,13 @@ func initialize() *error.Error {
 	record.Succeed("日志模块初始化成功")
 
 	// 4.初始化连接Kafka
-	if ret = kafka.Init([]string{settings.Config.Kafaka.Addr}, settings.Config.Kafaka.Port, settings.Config.Kafaka.ChanSize); ret != error.Null() {
+	if ret = kafka.Init(settings.Config.Kafaka); ret != error.Null() {
 		return ret
 	}
 	logger.L().Info("Kafka模块初始化成功")
 
 	// 5.初始化连接Etcd
-	if ret = etcd.Init([]string{settings.Config.Etcd.Addr}); ret != error.Null() {
+	if ret = etcd.Init(settings.Config.Etcd); ret != error.Null() {
 		return ret
 	}
 	logger.L().Info("Etcd模块初始化成功")
@@ -61,12 +61,25 @@ func initialize() *error.Error {
 }
 
 func server() {
+	var err *error.Error
+	var allConf []models.CollectEntry
 	defer logger.Sync()
-	// 监视配置文件更新
+	// 监视系统配置文件更新
 	go watch.ConfigFileUpdate()
+
+	if err = etcd.PutConf(settings.Config.Etcd.CollectKey); err != error.Null() {
+		return
+	}
+	if allConf, err = etcd.GetConf(settings.Config.Etcd.CollectKey); err != error.Null() {
+		return
+	}
+	// 监视日志收集Key更新
+	go etcd.WatchConf(settings.Config.Etcd.CollectKey)
+	// 初始化收集器并启动
+	collector.Init(allConf)
 
 	for {
 		time.Sleep(time.Second)
-		fmt.Println(system.LocalTime())
+		// fmt.Println(system.LocalTime())
 	}
 }
