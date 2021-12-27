@@ -1,7 +1,7 @@
 package system
 
 import (
-	"LogAgent/common/error"
+	"LogAgent/universal/error"
 	"net"
 	"time"
 )
@@ -9,6 +9,10 @@ import (
 // LocalTime 获取本地时间（毫秒级）
 func LocalTime() string {
 	return time.Now().Local().Format("2006-01-02 15:04:05.000")
+}
+
+func UtcTime() string {
+	return time.Now().Local().Format("2006-01-02T15:04:05.000+0800")
 }
 
 func LocalIP() (ip string, err *error.Error) {

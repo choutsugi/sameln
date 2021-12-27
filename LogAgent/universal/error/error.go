@@ -1,3 +1,4 @@
+// Package error 错误处理模块，封装原生error
 package error
 
 import (

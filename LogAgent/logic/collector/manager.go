@@ -1,70 +1,76 @@
 package collector
 
 import (
-	"LogAgent/common/error"
-	"LogAgent/common/logger"
-	"LogAgent/logic/models"
+	"LogAgent/logic/types"
+	"LogAgent/universal/error"
+	"LogAgent/universal/logger"
+	"go.uber.org/atomic"
 )
 
 type taskManager struct {
-	taskMap          map[string]*collectTask
-	CollectEntryList []models.CollectEntry
-	queue            chan []models.CollectEntry
+	tasks            map[string]*task
+	CollectEntryList []types.CollectEntry
+	queue            chan []types.CollectEntry
 }
 
 var (
-	mgr *taskManager
+	manager *taskManager
+	started atomic.Bool
 )
 
-func Init(allConfig []models.CollectEntry) {
-	manager := &taskManager{
-		taskMap:          make(map[string]*collectTask, 20),
-		CollectEntryList: allConfig,
-		queue:            make(chan []models.CollectEntry),
+func Start(entries []types.CollectEntry) {
+	if started.Load() {
+		return
+	}
+	manager = &taskManager{
+		tasks:            make(map[string]*task, 20),
+		CollectEntryList: entries,
+		queue:            make(chan []types.CollectEntry),
 	}
 
-	for _, config := range allConfig {
-		task := newTask(config)
+	for _, entry := range entries {
+		task := createTask(entry)
 		if err := task.init(); err != error.Null() {
-			logger.L().Warnf("TailFile: create task %s failed.", config.Path)
+			logger.L().Warnf("TailFile: create task %s failed.", entry.Path)
 			continue
 		}
-		manager.taskMap[task.path] = task
-		logger.L().Infow("TailFile: task %s is ready to start.", task.path)
+		manager.tasks[task.path] = task
+		logger.L().Infof("TailFile: task %s is ready to start.", task.path)
 		go task.run()
 	}
 
 	go manager.watch()
+	started.Store(true)
 	return
 }
 
-func (mgr *taskManager) isExist(conf models.CollectEntry) (ok bool) {
-	_, ok = mgr.taskMap[conf.Path]
+func (mgr *taskManager) isExist(conf types.CollectEntry) (ok bool) {
+	_, ok = mgr.tasks[conf.Path]
 	return
 }
 
 func (mgr *taskManager) watch() {
 	for {
-		allConf := <-mgr.queue
-		logger.L().Infof("TailFile: configuration has been updated from etcd.")
-		for _, conf := range allConf {
+		entries := <-mgr.queue
+		logger.L().Info("TailFile: configuration has been updated from etcd.")
+		for _, conf := range entries {
 			if mgr.isExist(conf) {
 				continue
 			}
-			task := newTask(conf)
+			task := createTask(conf)
 			if err := task.init(); err != error.Null() {
 				logger.L().Warnf("TailFile: create task %s failed.", conf.Path)
 				continue
 			}
-			mgr.taskMap[task.path] = task
-			logger.L().Infow("TailFile: task %s is ready to start.", task.path)
+			mgr.tasks[task.path] = task
+			logger.L().Infof("TailFile: task %s is ready to start.", task.path)
 			go task.run()
 		}
 
-		for key, task := range mgr.taskMap {
+		for key, task := range mgr.tasks {
 			var isExist bool
-			for _, conf := range allConf {
-				if key == conf.Path {
+			for _, entry := range entries {
+				if key == entry.Path {
 					isExist = true
 					break
 				}
@@ -72,12 +78,12 @@ func (mgr *taskManager) watch() {
 			if !isExist {
 				logger.L().Infof("TailFile: task:%s is ready to stop.", key)
 				task.cancel()
-				delete(mgr.taskMap, task.path)
+				delete(mgr.tasks, task.path)
 			}
 		}
 	}
 }
 
-func UpdateConf(allConf []models.CollectEntry) {
-	mgr.queue <- allConf
+func UpdateConfig(entries []types.CollectEntry) {
+	manager.queue <- entries
 }

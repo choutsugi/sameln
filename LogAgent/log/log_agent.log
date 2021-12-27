@@ -1,71 +1,22 @@
-{"level":"FATAL","time":"2021-12-19T21:43:23.039+0800","caller":"kafka/kafka.go:26","msg":"Kafka连接失败{err 0 0  kafka: client has run out of available brokers to talk to (Is your cluster reachable?)}"}
-{"level":"FATAL","time":"2021-12-19T21:44:54.683+0800","caller":"kafka/kafka.go:24","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-19T22:43:28.424+0800","caller":"kafka/kafka.go:24","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-20T09:30:01.478+0800","caller":"kafka/kafka.go:24","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-20T09:31:23.273+0800","caller":"kafka/kafka.go:24","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-20T09:31:57.435+0800","caller":"kafka/kafka.go:24","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-20T10:15:08.395+0800","caller":"kafka/kafka.go:24","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-20T10:17:14.501+0800","caller":"kafka/kafka.go:24","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-20T10:18:23.976+0800","caller":"kafka/kafka.go:24","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-20T10:25:40.039+0800","caller":"kafka/kafka.go:24","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"INFO","time":"2021-12-20T10:48:15.383+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-20T10:50:02.417+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-20T10:50:02.418+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"FATAL","time":"2021-12-20T19:38:58.696+0800","caller":"kafka/kafka.go:29","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-20T19:43:51.100+0800","caller":"kafka/kafka.go:29","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-20T19:44:34.470+0800","caller":"kafka/kafka.go:29","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"INFO","time":"2021-12-20T19:57:54.223+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-20T19:57:54.225+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"FATAL","time":"2021-12-24T10:02:59.169+0800","caller":"kafka/kafka.go:29","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-24T10:48:12.016+0800","caller":"kafka/kafka.go:31","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"FATAL","time":"2021-12-24T10:48:57.408+0800","caller":"kafka/kafka.go:31","msg":"Kafka连接失败","err":"kafka: client has run out of available brokers to talk to (Is your cluster reachable?)"}
-{"level":"INFO","time":"2021-12-24T10:51:00.906+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T10:51:00.913+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:12:44.706+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:12:44.749+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:18:46.703+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:18:48.282+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:30:10.772+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:30:11.556+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:32:24.667+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:32:24.669+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:33:25.518+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:33:25.520+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:33:47.966+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:33:47.969+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T15:33:49.980+0800","caller":"etcd/etcd.go:47","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T15:37:18.263+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:37:18.264+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:37:47.253+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:37:47.254+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T15:38:21.859+0800","caller":"etcd/etcd.go:47","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T15:39:11.928+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:39:11.929+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T15:39:16.938+0800","caller":"etcd/etcd.go:47","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T15:44:20.306+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:44:20.307+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T15:44:21.322+0800","caller":"etcd/etcd.go:48","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T15:44:36.523+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T15:44:36.524+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T15:44:48.578+0800","caller":"etcd/etcd.go:48","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T16:07:38.407+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T16:07:38.410+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T16:08:33.838+0800","caller":"etcd/etcd.go:48","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T16:08:56.343+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T16:08:56.344+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T16:08:57.354+0800","caller":"etcd/etcd.go:48","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T16:09:18.708+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T16:09:18.709+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T16:09:23.743+0800","caller":"etcd/etcd.go:48","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T16:25:53.752+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T16:25:53.753+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T16:25:58.772+0800","caller":"etcd/etcd.go:48","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T16:30:30.827+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T16:30:30.828+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T16:30:35.844+0800","caller":"etcd/etcd.go:49","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T16:34:44.187+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T16:35:57.646+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T16:36:04.961+0800","caller":"etcd/etcd.go:49","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
-{"level":"INFO","time":"2021-12-24T17:56:49.087+0800","caller":"app/app.go:52","msg":"Kafka模块初始化成功"}
-{"level":"INFO","time":"2021-12-24T17:56:49.089+0800","caller":"app/app.go:58","msg":"Etcd模块初始化成功"}
-{"level":"WARN","time":"2021-12-24T17:56:54.133+0800","caller":"etcd/etcd.go:48","msg":"设置Key为collect_log_26.26.26.1_conf的配置失败","err":"context deadline exceeded"}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.256","CALLER":"app/app.go:48","FUNC":"LogAgent/app.initialize","MSG":"日志模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.262","CALLER":"app/app.go:54","FUNC":"LogAgent/app.initialize","MSG":"Kafka模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.262","CALLER":"app/app.go:60","FUNC":"LogAgent/app.initialize","MSG":"Etcd模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.286","CALLER":"etcd/etcd.go:85","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"读取Key为collect_log_26.26.26.1_conf的配置成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"etcd/etcd.go:94","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"解析Key为collect_log_26.26.26.1_conf的配置成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s4.log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/web.log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s5.log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s5.log started."}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.288","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s4.log started."}
+{"LEVEL":"info","TIME":"2021-12-27 17:37:42.288","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/web.log started."}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.781","CALLER":"app/app.go:48","FUNC":"LogAgent/app.initialize","MSG":"日志模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.804","CALLER":"app/app.go:54","FUNC":"LogAgent/app.initialize","MSG":"Kafka模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.805","CALLER":"app/app.go:60","FUNC":"LogAgent/app.initialize","MSG":"Etcd模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"etcd/etcd.go:85","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"读取Key为collect_log_26.26.26.1_conf的配置成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"etcd/etcd.go:94","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"解析Key为collect_log_26.26.26.1_conf的配置成功"}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s4.log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/web.log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s5.log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.989","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s4.log started."}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.989","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/web.log started."}
+{"LEVEL":"info","TIME":"2021-12-27 17:39:30.989","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s5.log started."}

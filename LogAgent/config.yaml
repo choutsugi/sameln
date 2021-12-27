@@ -12,7 +12,7 @@ log:
   max_backups: 7
 
 etcd:
-  addr: "192.168.99.100:2379"
+  addr: "127.0.0.1:2379"
   collect_key: "collect_log_%s_conf"
 
 kafka:
