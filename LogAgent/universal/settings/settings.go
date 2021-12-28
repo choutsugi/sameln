@@ -1,8 +1,9 @@
 package settings
 
 import (
-	"LogAgent/universal/bundles"
+	"LogAgent/universal/codes"
 	"LogAgent/universal/error"
+	"LogAgent/universal/generic"
 	"LogAgent/universal/record"
 	"flag"
 	"go.uber.org/atomic"
@@ -27,38 +28,38 @@ func Init() *error.Error {
 	viper.SetConfigFile(*filePath)
 
 	// 读取配置信息
-	record.Info("开始加载配置文件%s", *filePath)
+	record.Info("The Settings module starts to load config file(%s).", *filePath)
 	if err := viper.ReadInConfig(); err != nil {
-		record.Fatal("加载配置文件%s失败", *filePath)
-		return error.NewError(err, error.CodeSysSettingsInitFailed)
+		record.Warn("The Settings module loads config file(%s) unsuccessfully!", *filePath)
+		return error.NewError(err, codes.InitSettingsFailed)
 	}
 
 	// 解析配置文件
-	record.Info("开始解析配置文件%s", *filePath)
+	record.Info("The Settings module starts to parse config file(%s).", *filePath)
 	if err := viper.Unmarshal(Config); err != nil {
-		record.Fatal("解析配置文件%s失败", *filePath)
-		return error.NewError(err, error.CodeSysSettingsInitFailed)
+		record.Warn("The Settings module parses config file(%s) unsuccessfully!", *filePath)
+		return error.NewError(err, codes.InitSettingsFailed)
 	}
 
 	// 监控配置文件
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {
 		if err := viper.Unmarshal(Config); err != nil {
-			msg := bundles.FileUpdateMsg{
+			msg := generic.FileUpdateMsg{
 				FileName:    *filePath,
 				IsUnmarshal: false,
 			}
-			bundles.ConfigFileUpdateChan <- msg
+			generic.ConfigFileUpdateChan <- msg
 		} else {
-			msg := bundles.FileUpdateMsg{
+			msg := generic.FileUpdateMsg{
 				FileName:    *filePath,
 				IsUnmarshal: true,
 			}
-			bundles.ConfigFileUpdateChan <- msg
+			generic.ConfigFileUpdateChan <- msg
 		}
 	})
 	initialized.Store(true)
-	return error.NullWithCode(error.CodeSysSettingsInitSucceed)
+	return error.NullWithCode(codes.InitSettingsSucceed)
 }
 
 // GetGlobalMode 获取全局运行模式
@@ -70,7 +71,7 @@ func GetGlobalMode() (mode string) {
 		mode = ModeDevelop
 	default:
 		mode = ModeDevelop
-		record.Fatal("解析运行模式错误，使用默认值%s", mode)
+		record.Warn("The Settings module parses running mode(default:%s) unsuccessfully!", mode)
 	}
 	return
 }

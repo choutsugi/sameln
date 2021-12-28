@@ -1,7 +1,7 @@
 package watch
 
 import (
-	"LogAgent/universal/bundles"
+	"LogAgent/universal/generic"
 	"LogAgent/universal/logger"
 )
 
@@ -10,7 +10,7 @@ func ConfigFileUpdate() {
 	go func() {
 		for {
 			select {
-			case msg := <-bundles.ConfigFileUpdateChan:
+			case msg := <-generic.ConfigFileUpdateChan:
 				if msg.IsUnmarshal {
 					if logger.IsInitialized() {
 						logger.L().Infof("配置文件%s已更新，解析成功", msg.FileName)

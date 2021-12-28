@@ -9,29 +9,27 @@ import (
 	"LogAgent/universal/logger"
 	"LogAgent/universal/record"
 	"LogAgent/universal/settings"
-	"LogAgent/universal/system"
 	"LogAgent/universal/watch"
-	"fmt"
 	"time"
 )
 
 var (
-	ret        = error.Null()
 	GlobalMode string
 )
 
 func Run() {
 	if initialize() != error.Null() {
+		record.Info("初始化失败，程序退出。")
 		return
 	}
 	server()
 }
 
-func initialize() *error.Error {
+func initialize() (err *error.Error) {
 	// 1.配置模块初始化
-	if ret = settings.Init(); ret != error.Null() {
-		record.Fatal(ret)
-		return ret
+	if err = settings.Init(); err != error.Null() {
+		record.Error(err)
+		return
 	}
 	record.Info("配置模块初始化成功")
 
@@ -40,26 +38,27 @@ func initialize() *error.Error {
 	record.Info("当前运行模式%s", GlobalMode)
 
 	// 3.初始化日志模块
-	if ret = logger.Init(settings.Config.Log, GlobalMode); ret != error.Null() {
-		record.Fatal(ret)
-		return ret
+	if err = logger.Init(settings.Config.Log, GlobalMode); err != error.Null() {
+		record.Error(err)
+		return
 	}
 	defer logger.Sync()
 	logger.L().Info("日志模块初始化成功")
 
 	// 4.初始化连接Kafka
-	if ret = kafka.Init(settings.Config.Kafaka); ret != error.Null() {
-		return ret
+	if err = kafka.Init(settings.Config.Kafaka); err != error.Null() {
+		record.Error(err)
+		return
 	}
 	logger.L().Info("Kafka模块初始化成功")
 
 	// 5.初始化连接Etcd
-	if ret = etcd.Init(settings.Config.Etcd); ret != error.Null() {
-		return ret
+	if err = etcd.Init(settings.Config.Etcd); err != error.Null() {
+		record.Error(err)
+		return
 	}
 	logger.L().Info("Etcd模块初始化成功")
-	return ret
-
+	return
 }
 
 func server() {
@@ -87,6 +86,6 @@ func server() {
 
 	for {
 		time.Sleep(time.Second)
-		fmt.Println("current time:", system.LocalTime())
+		// fmt.Println("current time:", system.LocalTime())
 	}
 }

@@ -21,15 +21,15 @@ var (
 	initialized atomic.Bool
 )
 
-// Init 日志模块初始化
-func Init(config *settings.LogConfigType, mode string) *error.Error {
+// Init Initialize the log module
+func Init(config *settings.LogConfigType, mode string) (err *error.Error) {
 	if initialized.Load() {
 		return error.Null()
 	}
 
 	level := new(zapcore.Level)
 	if err := level.UnmarshalText([]byte(config.Level)); err != nil {
-		record.Fatal("日志模块解析级别配置信息失败")
+		record.Warn("Failed to unmarshal the running level, please check the configuration file.")
 		return error.NewError(err, error.CodeSysLoggerInitFailed)
 	}
 
@@ -48,7 +48,6 @@ func Init(config *settings.LogConfigType, mode string) *error.Error {
 	}
 
 	logger := zap.New(core, zap.AddCaller())
-	// 替换zap包中全局的logger实例
 	zap.ReplaceGlobals(logger)
 	log = logger.Sugar()
 
@@ -117,5 +116,5 @@ func createEncoder(logType string) zapcore.Encoder {
 
 // 创建日志时间格式编码器：自定义
 func createTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-	enc.AppendString(t.Format("2006-01-02 15:04:05.000"))
+	enc.AppendString(t.Format("2006-01-02 15:04:05.000000"))
 }

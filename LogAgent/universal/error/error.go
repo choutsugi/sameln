@@ -2,6 +2,7 @@
 package error
 
 import (
+	"LogAgent/universal/codes"
 	"errors"
 	"fmt"
 	"runtime"
@@ -22,19 +23,22 @@ type Error struct {
 
 var (
 	null = &Error{
-		StatusCode: CodeSysSuccess,
-		Message:    StatusSuccess,
+		StatusCode: codes.Succeed,
+		Message:    codes.Message(codes.Succeed),
 		rawErr:     nil,
 		callStack:  nil,
 	}
 )
 
-// Info 返回自定义错误信息
+// Info 获取错误信息
 func (err *Error) Info() string {
+	if err.rawErr != nil {
+		return err.Message + fmt.Sprintf(" Err:%s!", err.rawErr.Error())
+	}
 	return err.Message
 }
 
-// RawErr 返回原生error
+// RawErr 获取原生error
 func (err *Error) RawErr() error {
 	return err.rawErr
 }
@@ -62,21 +66,13 @@ func (err *Error) CallStack() string {
 	return result
 }
 
-func GetInfo(code uint64) string {
-	message, isExist := errMsg[code]
-	if !isExist {
-		return ""
-	}
-	return message
-}
-
 // NewError 错误打包
 func NewError(raw error, code uint64) *Error {
 	pcs := make([]uintptr, 32)
 	// skip the first 3 invocations
 	count := runtime.Callers(3, pcs)
 	return &Error{
-		Message:    errMsg[code],
+		Message:    codes.Message(code),
 		StatusCode: code,
 		rawErr:     raw,
 		callStack:  pcs[:count],
@@ -112,12 +108,8 @@ func Null() *Error {
 }
 
 // NullWithCode 带状态码的空错误
-func NullWithCode(code uint64) *Error {
-	message, isExist := errMsg[code]
-	if !isExist {
-		message = StatusUnknown
-	}
-	null.Message = message
+func NullWithCode(c uint64) *Error {
+	null.Message = codes.Message(c)
 	return null
 }
 

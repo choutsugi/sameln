@@ -1,22 +1,22 @@
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.256","CALLER":"app/app.go:48","FUNC":"LogAgent/app.initialize","MSG":"日志模块初始化成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.262","CALLER":"app/app.go:54","FUNC":"LogAgent/app.initialize","MSG":"Kafka模块初始化成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.262","CALLER":"app/app.go:60","FUNC":"LogAgent/app.initialize","MSG":"Etcd模块初始化成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.286","CALLER":"etcd/etcd.go:85","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"读取Key为collect_log_26.26.26.1_conf的配置成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"etcd/etcd.go:94","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"解析Key为collect_log_26.26.26.1_conf的配置成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s4.log is ready to start."}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/web.log is ready to start."}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s5.log is ready to start."}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.287","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s5.log started."}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.288","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s4.log started."}
-{"LEVEL":"info","TIME":"2021-12-27 17:37:42.288","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/web.log started."}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.781","CALLER":"app/app.go:48","FUNC":"LogAgent/app.initialize","MSG":"日志模块初始化成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.804","CALLER":"app/app.go:54","FUNC":"LogAgent/app.initialize","MSG":"Kafka模块初始化成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.805","CALLER":"app/app.go:60","FUNC":"LogAgent/app.initialize","MSG":"Etcd模块初始化成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"etcd/etcd.go:85","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"读取Key为collect_log_26.26.26.1_conf的配置成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"etcd/etcd.go:94","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"解析Key为collect_log_26.26.26.1_conf的配置成功"}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s4.log is ready to start."}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/web.log is ready to start."}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.988","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s5.log is ready to start."}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.989","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s4.log started."}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.989","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/web.log started."}
-{"LEVEL":"info","TIME":"2021-12-27 17:39:30.989","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task D:/ProgramData/LogAgent/logs/s5.log started."}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:41.779","CALLER":"app/app.go:46","FUNC":"LogAgent/app.initialize","MSG":"日志模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:41.785","CALLER":"app/app.go:53","FUNC":"LogAgent/app.initialize","MSG":"Kafka模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:41.786","CALLER":"app/app.go:60","FUNC":"LogAgent/app.initialize","MSG":"Etcd模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:42.584","CALLER":"etcd/etcd.go:85","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"读取Key为collect_log_26.26.26.1_conf的配置成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:42.585","CALLER":"etcd/etcd.go:94","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"解析Key为collect_log_26.26.26.1_conf的配置成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:42.585","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task s4_log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:42.585","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task web_log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:42.585","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task s5_log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:42.585","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task web_log started."}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:42.586","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task s4_log started."}
+{"LEVEL":"info","TIME":"2021-12-28 14:18:42.586","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task s5_log started."}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.368247","CALLER":"app/app.go:46","FUNC":"LogAgent/app.initialize","MSG":"日志模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.375248","CALLER":"app/app.go:53","FUNC":"LogAgent/app.initialize","MSG":"Kafka模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.375748","CALLER":"app/app.go:60","FUNC":"LogAgent/app.initialize","MSG":"Etcd模块初始化成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.888313","CALLER":"etcd/etcd.go:85","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"读取Key为collect_log_26.26.26.1_conf的配置成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.888313","CALLER":"etcd/etcd.go:94","FUNC":"LogAgent/logic/etcd.GetConfig","MSG":"解析Key为collect_log_26.26.26.1_conf的配置成功"}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.888313","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task s4_log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.888313","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task web_log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.888313","CALLER":"collector/manager.go:38","FUNC":"LogAgent/logic/collector.Start","MSG":"TailFile: task s5_log is ready to start."}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.888813","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task s5_log started."}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.889313","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task s4_log started."}
+{"LEVEL":"info","TIME":"2021-12-28 14:30:36.889313","CALLER":"collector/collector.go:48","FUNC":"LogAgent/logic/collector.(*task).run","MSG":"TailFile: task web_log started."}

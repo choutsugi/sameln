@@ -1,6 +1,7 @@
 package kafka
 
 import (
+	"LogAgent/universal/codes"
 	"LogAgent/universal/error"
 	"LogAgent/universal/generic"
 	"LogAgent/universal/logger"
@@ -13,14 +14,14 @@ import (
 type ProducerMessage = sarama.ProducerMessage
 
 var (
-	client      sarama.SyncProducer
-	msgChan     chan *ProducerMessage
+	cli         sarama.SyncProducer
+	queue       chan *ProducerMessage
 	initialized atomic.Bool
 )
 
-func Init(kafkaConfig *settings.KafkaConfigType) *error.Error {
+func Init(kafkaConfig *settings.KafkaConfigType) (err *error.Error) {
 	if initialized.Load() {
-		return error.Null()
+		return
 	}
 	address := []string{kafkaConfig.Addr}
 	// 1.生产者配置
@@ -29,51 +30,55 @@ func Init(kafkaConfig *settings.KafkaConfigType) *error.Error {
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.Return.Successes = true
 
-	var err error.RawErr
 	// 2.连接kafka
-	if client, err = sarama.NewSyncProducer(address, config); err != nil {
-		logger.L().Fatalw(error.GetInfo(error.CodeKafkaConnFailed), "err", err.Error())
-		return error.NewError(err, error.CodeKafkaConnFailed)
+	var raw error.RawErr
+	if cli, raw = sarama.NewSyncProducer(address, config); raw != nil {
+		err = error.NewError(raw, codes.KafkaConnectFailed)
+		return
 	}
 
 	// 3.初始化MsgChan
-	msgChan = make(chan *sarama.ProducerMessage, kafkaConfig.ChanSize)
+	queue = make(chan *sarama.ProducerMessage, kafkaConfig.ChanSize)
 
 	// 4.启动后台goroutine用于发送
 	go sendMsg()
 	initialized.Store(true)
+
 	return error.Null()
 }
 
 func Write(msg *ProducerMessage) {
-	msgChan <- msg
+	queue <- msg
 }
 
 func sendMsg() {
+	var err *error.Error
+	var raw error.RawErr
+	var partition int32
+	var offset int64
+
 	for {
 		select {
-		case msg := <-msgChan:
-			pid, offset, err := client.SendMessage(msg)
+		case msg := <-queue:
+			partition, offset, raw = cli.SendMessage(msg)
 			if err != nil {
-				logger.L().Warn(error.GetInfo(error.CodeKafkaConnFailed))
+				err = error.NewError(raw, codes.KafkaSendFailed)
+				logger.L().Warn(err.Info())
 			}
-			logger.L().Debugw(
-				error.GetInfo(error.CodeKafkaSendSucceed), "pid", pid, "offset", offset,
-			)
+			logger.L().Debugf(codes.Message(codes.KafkaSendSucceed)+" partition:%v offset:%v.", partition, offset)
 		}
 	}
 }
 
 func Close() {
 	for tick := 0; tick < generic.TryCloseWithMaxTime; tick++ {
-		if raw := client.Close(); raw == nil {
+		if raw := cli.Close(); raw == nil {
 			break
 		}
 		time.Sleep(1 * time.Second)
 	}
 }
 
-// StringEncoder 同sarama库的StringEncoder
 type StringEncoder string
 
 func (s StringEncoder) Encode() ([]byte, error.RawErr) {

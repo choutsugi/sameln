@@ -1,6 +1,7 @@
 package system
 
 import (
+	"LogAgent/universal/codes"
 	"LogAgent/universal/error"
 	"net"
 	"time"
@@ -18,7 +19,7 @@ func UtcTime() string {
 func LocalIP() (ip string, err *error.Error) {
 	address, raw := net.InterfaceAddrs()
 	if raw != nil {
-		return "", error.NewError(raw, error.CodeEtcdGetLocalIpFailed)
+		return "", error.NewError(raw, codes.SystemGetLocalIpFailed)
 	}
 
 	for _, addr := range address {
@@ -35,5 +36,5 @@ func LocalIP() (ip string, err *error.Error) {
 		ip := ipAddr.IP.String()
 		return ip, error.Null()
 	}
-	return "", error.NewError(raw, error.CodeEtcdGetLocalIpFailed)
+	return "", error.NewError(raw, codes.SystemGetLocalIpFailed)
 }

@@ -49,12 +49,7 @@ func Warn(args ...interface{}) {
 	log(WARN, args...)
 }
 
-// Fatal 控制台打印错误信息
-func Fatal(args ...interface{}) {
-	log(FATAL, args...)
-}
-
-// Error 控制台打印自定义错误
+// Error 控制台打印错误错误
 func Error(err *error.Error) {
 	logError(err.Info(), err.RawErr(), err.CallStack())
 }

@@ -36,7 +36,7 @@ func (t *task) init() *error.Error {
 
 	t.ins, raw = tail.TailFile(t.path, config)
 	if raw != nil {
-		logger.L().Warnf("collector: init task %s failed.", t.path)
+		logger.L().Warnf("collector: init task %s failed.", t.topic)
 		return error.NewError(raw, error.CodeTailInitTaskFailed)
 	}
 
@@ -45,15 +45,15 @@ func (t *task) init() *error.Error {
 
 // 运行日志收集任务
 func (t *task) run() {
-	logger.L().Infof("TailFile: task %s started.", t.path)
+	logger.L().Infof("TailFile: task %s started.", t.topic)
 	for {
 		select {
 		case <-t.ctx.Done():
-			logger.L().Warnf("TailFile: task %s stopped.", t.path)
+			logger.L().Warnf("TailFile: task %s stopped.", t.topic)
 			return
 		case line, ready := <-t.ins.Lines:
 			if !ready {
-				logger.L().Warnf("TailFile: task %s failed to read log.", t.path)
+				logger.L().Warnf("TailFile: task %s failed to read log.", t.topic)
 				continue
 			}
 			if len(strings.Trim(line.Text, "\r")) == 0 {
@@ -64,7 +64,7 @@ func (t *task) run() {
 				Value: kafka.StringEncoder(line.Text),
 			}
 			kafka.Write(msg)
-			logger.L().Debugf("TailFile: task %s sent message successfully.", t.path)
+			logger.L().Debugf("TailFile: task %s sent message successfully.", t.topic)
 		}
 	}
 }

@@ -31,11 +31,11 @@ func Start(entries []types.CollectEntry) {
 	for _, entry := range entries {
 		task := createTask(entry)
 		if err := task.init(); err != error.Null() {
-			logger.L().Warnf("TailFile: create task %s failed.", entry.Path)
+			logger.L().Warnf("TailFile: create task %s failed.", entry.Topic)
 			continue
 		}
 		manager.tasks[task.path] = task
-		logger.L().Infof("TailFile: task %s is ready to start.", task.path)
+		logger.L().Infof("TailFile: task %s is ready to start.", task.topic)
 		go task.run()
 	}
 
@@ -59,11 +59,11 @@ func (mgr *taskManager) watch() {
 			}
 			task := createTask(conf)
 			if err := task.init(); err != error.Null() {
-				logger.L().Warnf("TailFile: create task %s failed.", conf.Path)
+				logger.L().Warnf("TailFile: create task %s failed.", conf.Topic)
 				continue
 			}
 			mgr.tasks[task.path] = task
-			logger.L().Infof("TailFile: task %s is ready to start.", task.path)
+			logger.L().Infof("TailFile: task %s is ready to start.", task.topic)
 			go task.run()
 		}
 
@@ -76,7 +76,7 @@ func (mgr *taskManager) watch() {
 				}
 			}
 			if !isExist {
-				logger.L().Infof("TailFile: task:%s is ready to stop.", key)
+				logger.L().Infof("TailFile: task %s is ready to stop.", task.topic)
 				task.cancel()
 				delete(mgr.tasks, task.path)
 			}
