@@ -5,7 +5,6 @@ import (
 	"LogAgent/universal/logger"
 )
 
-// ConfigFileUpdate 监视配置文件更新
 func ConfigFileUpdate() {
 	go func() {
 		for {
@@ -13,12 +12,12 @@ func ConfigFileUpdate() {
 			case msg := <-generic.ConfigFileUpdateChan:
 				if msg.IsUnmarshal {
 					if logger.IsInitialized() {
-						logger.L().Infof("配置文件%s已更新，解析成功", msg.FileName)
+						logger.L().Infof("The Watch module monitors that the config(%s) has been updated and parsed successfully.", msg.FileName)
 					}
 					continue
 				}
 				if logger.IsInitialized() {
-					logger.L().Warnf("配置文件%s已更新，解析失败", msg.FileName)
+					logger.L().Errorf("The Watch module monitors that the config(%s) has been updated but parsed successfully! Error:%s", msg.FileName, msg.Raw.Error())
 				}
 			default:
 

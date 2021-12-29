@@ -19,29 +19,28 @@ var (
 	initialized atomic.Bool
 )
 
-func Init(kafkaConfig *settings.KafkaConfigType) (err *error.Error) {
+func Init(kafkaConfig *settings.KafkaConfigType) *error.Error {
 	if initialized.Load() {
-		return
+		logger.L().Error("The Kafka module unable to re-initialize!")
+		return error.NewError(nil, codes.InitKafkaFailed)
 	}
 	address := []string{kafkaConfig.Addr}
-	// 1.生产者配置
+
 	config := sarama.NewConfig()
 	config.Producer.RequiredAcks = sarama.WaitForAll
 	config.Producer.Partitioner = sarama.NewRandomPartitioner
 	config.Producer.Return.Successes = true
 
-	// 2.连接kafka
 	var raw error.RawErr
 	if cli, raw = sarama.NewSyncProducer(address, config); raw != nil {
-		err = error.NewError(raw, codes.KafkaConnectFailed)
-		return
+		logger.L().Errorf("The Kafka module creates sync-producer unsuccessfully! Error:%s", raw.Error())
+		return error.NewError(raw, codes.InitKafkaFailed)
 	}
 
-	// 3.初始化MsgChan
 	queue = make(chan *sarama.ProducerMessage, kafkaConfig.ChanSize)
 
-	// 4.启动后台goroutine用于发送
 	go sendMsg()
+
 	initialized.Store(true)
 
 	return error.Null()
@@ -52,7 +51,6 @@ func Write(msg *ProducerMessage) {
 }
 
 func sendMsg() {
-	var err *error.Error
 	var raw error.RawErr
 	var partition int32
 	var offset int64
@@ -61,11 +59,10 @@ func sendMsg() {
 		select {
 		case msg := <-queue:
 			partition, offset, raw = cli.SendMessage(msg)
-			if err != nil {
-				err = error.NewError(raw, codes.KafkaSendFailed)
-				logger.L().Warn(err.Info())
+			if raw != nil {
+				logger.L().Warnf("The Kafka module sends message to the Kafka service unsuccessfully! Error:%s", raw.Error())
 			}
-			logger.L().Debugf(codes.Message(codes.KafkaSendSucceed)+" partition:%v offset:%v.", partition, offset)
+			logger.L().Debugf("The Kafka module sends message to the Kafka service successfully! Partition:%v Offset:%v.", partition, offset)
 		}
 	}
 }

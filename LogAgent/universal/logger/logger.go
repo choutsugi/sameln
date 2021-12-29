@@ -1,7 +1,8 @@
-// Package logger 日志模块，基于zap库的日志器
+// Package logger
 package logger
 
 import (
+	"LogAgent/universal/codes"
 	"LogAgent/universal/error"
 	"LogAgent/universal/generic"
 	"LogAgent/universal/record"
@@ -22,15 +23,16 @@ var (
 )
 
 // Init Initialize the log module
-func Init(config *settings.LogConfigType, mode string) (err *error.Error) {
+func Init(config *settings.LogConfigType, mode string) *error.Error {
 	if initialized.Load() {
-		return error.Null()
+		L().Error("The Logger module unable to re-initialize!")
+		return error.NewError(nil, codes.InitLoggerFailed)
 	}
 
 	level := new(zapcore.Level)
-	if err := level.UnmarshalText([]byte(config.Level)); err != nil {
-		record.Warn("Failed to unmarshal the running level, please check the configuration file.")
-		return error.NewError(err, error.CodeSysLoggerInitFailed)
+	if raw := level.UnmarshalText([]byte(config.Level)); raw != nil {
+		record.Warn("The Logger module unmarshal the running level unsuccessfully, please check the configuration file(%s).", config.FileName)
+		return error.NewError(raw, codes.InitLoggerFailed)
 	}
 
 	writeSyncer := createWriteSyncer(config.FileName, config.MaxSize, config.MaxAge, config.MaxBackups)
@@ -55,12 +57,12 @@ func Init(config *settings.LogConfigType, mode string) (err *error.Error) {
 	return error.Null()
 }
 
-// L 日志器
+// L zap.SugaredLogger
 func L() *zap.SugaredLogger {
 	return log
 }
 
-// Sync 刷新日志缓存
+// Sync flush log buffer
 func Sync() {
 	for tick := 0; tick < generic.TrySyncWithMaxTime; tick++ {
 		if raw := log.Sync(); raw == nil {
@@ -70,12 +72,11 @@ func Sync() {
 	}
 }
 
-// IsInitialized 是否已初始化
+// IsInitialized initialized or not
 func IsInitialized() bool {
 	return initialized.Load()
 }
 
-// 创建日志写同步器
 func createWriteSyncer(filename string, maxSize, maxAge, maxBackup int) zapcore.WriteSyncer {
 	lumberJackLogger := &lumberjack.Logger{
 		Filename:   filename,
@@ -86,7 +87,6 @@ func createWriteSyncer(filename string, maxSize, maxAge, maxBackup int) zapcore.
 	return zapcore.AddSync(lumberJackLogger)
 }
 
-// 创建日志编码器
 func createEncoder(logType string) zapcore.Encoder {
 	config := zapcore.EncoderConfig{
 		MessageKey:     "MSG",
@@ -103,7 +103,7 @@ func createEncoder(logType string) zapcore.Encoder {
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 		EncodeName:     zapcore.FullNameEncoder,
 	}
-	// 根据配置设置日志输出位置
+
 	switch logType {
 	case outTypeJson:
 		return zapcore.NewJSONEncoder(config)
@@ -114,7 +114,6 @@ func createEncoder(logType string) zapcore.Encoder {
 	}
 }
 
-// 创建日志时间格式编码器：自定义
 func createTimeEncoder(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
 	enc.AppendString(t.Format("2006-01-02 15:04:05.000000"))
 }

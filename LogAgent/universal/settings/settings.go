@@ -17,49 +17,51 @@ var (
 	initialized atomic.Bool
 )
 
-// Init 配置模块初始化：从文件读取配置信息并赋值于settings.Config
 func Init() *error.Error {
 	if initialized.Load() {
-		return error.Null()
+		record.Warn("The Settings module unable to re-initialize!")
+		return error.NewError(nil, codes.InitSettingsFailed)
 	}
-	// 通过命令行参数指定配置文件路径
+	// get command line parameters
 	filePath := flag.String("config", "./config.yaml", "log_agent -config=\"./config.yaml\"")
 	flag.Parse()
 	viper.SetConfigFile(*filePath)
 
-	// 读取配置信息
+	// read config file
 	record.Info("The Settings module starts to load config file(%s).", *filePath)
 	if err := viper.ReadInConfig(); err != nil {
 		record.Warn("The Settings module loads config file(%s) unsuccessfully!", *filePath)
 		return error.NewError(err, codes.InitSettingsFailed)
 	}
 
-	// 解析配置文件
+	// parse config file
 	record.Info("The Settings module starts to parse config file(%s).", *filePath)
 	if err := viper.Unmarshal(Config); err != nil {
 		record.Warn("The Settings module parses config file(%s) unsuccessfully!", *filePath)
 		return error.NewError(err, codes.InitSettingsFailed)
 	}
 
-	// 监控配置文件
+	// watch config file
 	viper.WatchConfig()
 	viper.OnConfigChange(func(in fsnotify.Event) {
-		if err := viper.Unmarshal(Config); err != nil {
+		if raw := viper.Unmarshal(Config); raw != nil {
 			msg := generic.FileUpdateMsg{
 				FileName:    *filePath,
 				IsUnmarshal: false,
+				Raw:         raw,
 			}
 			generic.ConfigFileUpdateChan <- msg
 		} else {
 			msg := generic.FileUpdateMsg{
 				FileName:    *filePath,
 				IsUnmarshal: true,
+				Raw:         nil,
 			}
 			generic.ConfigFileUpdateChan <- msg
 		}
 	})
 	initialized.Store(true)
-	return error.NullWithCode(codes.InitSettingsSucceed)
+	return error.Null()
 }
 
 // GetGlobalMode 获取全局运行模式

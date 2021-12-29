@@ -3,6 +3,7 @@ package etcd
 import (
 	"LogAgent/logic/collector"
 	"LogAgent/logic/types"
+	"LogAgent/universal/codes"
 	"LogAgent/universal/error"
 	"LogAgent/universal/generic"
 	"LogAgent/universal/logger"
@@ -17,30 +18,29 @@ import (
 )
 
 var (
-	client      *clientv3.Client
+	cli         *clientv3.Client
 	initialized atomic.Bool
 )
 
 func Init(etcdConfig *settings.EtcdConfigType) *error.Error {
 	if initialized.Load() {
-		return error.Null()
+		logger.L().Error("The Etcd module unable to re-initialize!")
+		return error.NewError(nil, codes.InitEtcdFailed)
 	}
 	var raw error.RawErr
-	client, raw = clientv3.New(clientv3.Config{
+	cli, raw = clientv3.New(clientv3.Config{
 		Endpoints:   []string{etcdConfig.Addr},
 		DialTimeout: time.Second * 5,
 	})
 	if raw != nil {
-		logger.L().Errorw("Etcd模块初始化失败", "err", raw.Error())
-		return error.NewError(raw, error.CodeEtcdConnectFailed)
+		logger.L().Errorf("The Etcd module connects to Etcd service unsuccessfully! Error:%s", raw.Error())
+		return error.NewError(raw, codes.EtcdConnectFailed)
 	}
 	initialized.Store(true)
 	return error.Null()
 }
 
-// PutConfig 设置配置项
 func PutConfig(key string) *error.Error {
-	// 获取IP生成Key
 	ip, err := system.LocalIP()
 	if err != error.Null() {
 		return err
@@ -48,76 +48,74 @@ func PutConfig(key string) *error.Error {
 	key = fmt.Sprintf(key, ip)
 	str := `[{"path":"D:/ProgramData/LogAgent/logs/s4.log","topic":"s4_log"},{"path":"D:/ProgramData/LogAgent/logs/web.log","topic":"web_log"},{"path":"D:/ProgramData/LogAgent/logs/s5.log","topic":"s5_log"}]`
 
-	ctx, cancel := context.WithTimeout(context.Background(), 2*time.Second)
-	_, raw := client.Put(ctx, key, str)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	_, raw := cli.Put(ctx, key, str)
 	cancel()
-
 	if raw != nil {
-		logger.L().Warnw(fmt.Sprintf("设置Key为%s的配置失败", key), "err", raw.Error())
-		return error.NewError(raw, error.CodeEtcdPutConfFailed)
+		logger.L().Errorf("The Etcd module sets config(%s) unsuccessfully! Error:%s", key, raw.Error())
+		return error.NewError(raw, codes.EtcdSetConfigFailed)
 	}
+	//logger.L().Infof("The Etcd module sets config(%s) successfully!", key)
 
 	return error.Null()
 }
 
-// GetConfig 获取配置项
-func GetConfig(key string) (collectEntryList []types.CollectEntry, err *error.Error) {
-	// 获取IP生成Key
+func GetConfig(key string) ([]types.CollectEntry, *error.Error) {
+	var entries []types.CollectEntry
+	var err *error.Error
+
 	ip, err := system.LocalIP()
 	if err != error.Null() {
-		return
+		logger.L().Errorf("The Etcd module gets local ip unsuccessfully! Error:%s", err.RawErr().Error())
+		return nil, error.NewError(err.RawErr(), codes.EtcdGetIpFailed)
 	}
 	key = fmt.Sprintf(key, ip)
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-	resp, raw := client.Get(ctx, key)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	resp, raw := cli.Get(ctx, key)
 	cancel()
-
 	if raw != nil {
-		logger.L().Warnw(fmt.Sprintf("读取Key为%s的配置失败", key), "err", raw.Error())
-		return
+		logger.L().Errorf("The Etcd module gets config unsuccessfully! Error:%s", raw.Error())
+		return nil, error.NewError(raw, codes.EtcdGetConfigFailed)
 	}
 
 	if len(resp.Kvs) == 0 {
-		logger.L().Errorf("etcd: conf of key:%s is not exist", key)
-		return
+		logger.L().Errorf("The Etcd module cannot find the specified-config(%s) from the Etcd service!", key)
+		return nil, error.NewError(nil, codes.EtcdConfigNotFound)
 	}
 
-	logger.L().Infow(fmt.Sprintf("读取Key为%s的配置成功", key))
+	logger.L().Infof("The Etcd module gets config-file(%s) successfully!", key)
 
 	ret := resp.Kvs[0]
-	// 对从etcd获取的Json格式的配置数据进行解析
-	raw = json.Unmarshal(ret.Value, &collectEntryList)
+	raw = json.Unmarshal(ret.Value, &entries)
 	if raw != nil {
-		logger.L().Warnw(fmt.Sprintf("解析Key为%s的配置失败", key), "err", raw.Error())
-		return
+		logger.L().Errorf("The Etcd module parses config(%s) unsuccessfully! Error:%s", key, raw.Error())
+		return nil, error.NewError(nil, codes.EtcdConfigParseFailed)
 	}
-	logger.L().Infow(fmt.Sprintf("解析Key为%s的配置成功", key))
-	return
+	logger.L().Infof("The Etcd module parses config(%s) successfully.", key)
+	return entries, error.Null()
 }
 
-// WatchConf 监视etcd配置变化
 func WatchConf(key string) {
-	watchChan := client.Watch(context.Background(), key)
-	var newConf []types.CollectEntry
+	watchChan := cli.Watch(context.Background(), key)
+	var entries []types.CollectEntry
 	for resp := range watchChan {
 		for _, event := range resp.Events {
-			newConf = []types.CollectEntry{}
-			logger.L().Info("etcd: configuration has been updated.")
-			fmt.Printf("type:%s, key:%s, value:%s", event.Type, event.Kv.Key, event.Kv.Value)
-			err := json.Unmarshal(event.Kv.Value, &newConf)
-			if err != nil {
-				logger.L().Errorf("etcd: conf of key:%s unmarshal failed, err:%v", event.Kv.Key, err)
+			entries = []types.CollectEntry{}
+			logger.L().Infof("The Etcd module monitors that the config(%s) has been updated! Type:%s Key:%s Value:%s", key, event.Type, event.Kv.Key, event.Kv.Value)
+			raw := json.Unmarshal(event.Kv.Value, &entries)
+			if raw != nil {
+				logger.L().Errorf("The Etcd module parses config(%s) unsuccessfully! Error:%s", key, raw.Error())
 				continue
 			}
-			// 如果配置更新则通知tailfile刷新任务
-			collector.UpdateConfig(newConf)
+			logger.L().Infof("The Etcd module parses config(%s) successfully!", key)
+			collector.UpdateConfig(entries)
 		}
 	}
 }
 
 func Close() {
 	for tick := 0; tick < generic.TryCloseWithMaxTime; tick++ {
-		if raw := client.Close(); raw == nil {
+		if raw := cli.Close(); raw == nil {
 			break
 		}
 		time.Sleep(1 * time.Second)

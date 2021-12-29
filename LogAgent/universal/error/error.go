@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// RawErr 原生error
+// RawErr original error
 type RawErr = error
 
 // Error 自定义错误包结构
@@ -68,6 +68,9 @@ func (err *Error) CallStack() string {
 
 // NewError 错误打包
 func NewError(raw error, code uint64) *Error {
+	if raw == nil {
+		raw = errors.New(codes.Message(code))
+	}
 	pcs := make([]uintptr, 32)
 	// skip the first 3 invocations
 	count := runtime.Callers(3, pcs)

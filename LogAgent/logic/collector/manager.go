@@ -8,9 +8,9 @@ import (
 )
 
 type taskManager struct {
-	tasks            map[string]*task
-	CollectEntryList []types.CollectEntry
-	queue            chan []types.CollectEntry
+	tasks   map[string]*task
+	Entries []types.CollectEntry
+	queue   chan []types.CollectEntry
 }
 
 var (
@@ -23,19 +23,19 @@ func Start(entries []types.CollectEntry) {
 		return
 	}
 	manager = &taskManager{
-		tasks:            make(map[string]*task, 20),
-		CollectEntryList: entries,
-		queue:            make(chan []types.CollectEntry),
+		tasks:   make(map[string]*task, 20),
+		Entries: entries,
+		queue:   make(chan []types.CollectEntry),
 	}
 
 	for _, entry := range entries {
 		task := createTask(entry)
 		if err := task.init(); err != error.Null() {
-			logger.L().Warnf("TailFile: create task %s failed.", entry.Topic)
+			logger.L().Errorf("The Collector module initializes tail-task(%s) unsuccessfully!", task.topic)
 			continue
 		}
 		manager.tasks[task.path] = task
-		logger.L().Infof("TailFile: task %s is ready to start.", task.topic)
+		logger.L().Infof("The Collector module initializes tail-task(%s) successfully and ready to start.", task.topic)
 		go task.run()
 	}
 
@@ -52,18 +52,18 @@ func (mgr *taskManager) isExist(conf types.CollectEntry) (ok bool) {
 func (mgr *taskManager) watch() {
 	for {
 		entries := <-mgr.queue
-		logger.L().Info("TailFile: configuration has been updated from etcd.")
+		logger.L().Info("The Collector module has been notified by the Etcd module that the config has been updated.")
 		for _, conf := range entries {
 			if mgr.isExist(conf) {
 				continue
 			}
 			task := createTask(conf)
 			if err := task.init(); err != error.Null() {
-				logger.L().Warnf("TailFile: create task %s failed.", conf.Topic)
+				logger.L().Errorf("The Collector module initializes tail-task(%s) unsuccessfully!", task.topic)
 				continue
 			}
 			mgr.tasks[task.path] = task
-			logger.L().Infof("TailFile: task %s is ready to start.", task.topic)
+			logger.L().Infof("The Collector module initializes tail-task(%s) successfully and ready to start.", task.topic)
 			go task.run()
 		}
 
@@ -76,7 +76,7 @@ func (mgr *taskManager) watch() {
 				}
 			}
 			if !isExist {
-				logger.L().Infof("TailFile: task %s is ready to stop.", task.topic)
+				logger.L().Infof("The Collector module's tail-task(%s) is ready to stop.", task.topic)
 				task.cancel()
 				delete(mgr.tasks, task.path)
 			}

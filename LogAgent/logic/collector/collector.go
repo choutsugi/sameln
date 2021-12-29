@@ -4,6 +4,7 @@ package collector
 import (
 	"LogAgent/logic/kafka"
 	"LogAgent/logic/types"
+	"LogAgent/universal/codes"
 	"LogAgent/universal/error"
 	"LogAgent/universal/logger"
 	"context"
@@ -11,16 +12,14 @@ import (
 	"strings"
 )
 
-// 日志收集任务结构
 type task struct {
-	path   string             // 日志文件路径
-	topic  string             // kafka主题
-	ins    *tail.Tail         // tail实例
-	ctx    context.Context    // 用于控制收集任务结束
-	cancel context.CancelFunc // 用于控制收集任务结束
+	path   string     // log file's path
+	topic  string     // kafka topic
+	ins    *tail.Tail // tail instance
+	ctx    context.Context
+	cancel context.CancelFunc
 }
 
-// 初始化日志收集任务：构造collectTask。
 func (t *task) init() *error.Error {
 	var raw error.RawErr
 	config := tail.Config{
@@ -36,24 +35,23 @@ func (t *task) init() *error.Error {
 
 	t.ins, raw = tail.TailFile(t.path, config)
 	if raw != nil {
-		logger.L().Warnf("collector: init task %s failed.", t.topic)
-		return error.NewError(raw, error.CodeTailInitTaskFailed)
+		logger.L().Warnf("The Collector module initializes tail-task(%s) unsuccessfully!", t.topic)
+		return error.NewError(raw, codes.CollectorInitTaskFailed)
 	}
 
 	return error.Null()
 }
 
-// 运行日志收集任务
 func (t *task) run() {
-	logger.L().Infof("TailFile: task %s started.", t.topic)
+	logger.L().Infof("The Collector module starts to run tail-task(%s).", t.topic)
 	for {
 		select {
 		case <-t.ctx.Done():
-			logger.L().Warnf("TailFile: task %s stopped.", t.topic)
+			logger.L().Infof("The Collector module stops to run tail-task(%s).", t.topic)
 			return
 		case line, ready := <-t.ins.Lines:
 			if !ready {
-				logger.L().Warnf("TailFile: task %s failed to read log.", t.topic)
+				logger.L().Warnf("The Collector module's tail-task(%s) reads log-file(%s) unsuccessfully!", t.topic, t.path)
 				continue
 			}
 			if len(strings.Trim(line.Text, "\r")) == 0 {
@@ -64,12 +62,11 @@ func (t *task) run() {
 				Value: kafka.StringEncoder(line.Text),
 			}
 			kafka.Write(msg)
-			logger.L().Debugf("TailFile: task %s sent message successfully.", t.topic)
+			logger.L().Debugf("The Collector module's tail-task(%s) sends message to Kafka service successfully!", t.topic)
 		}
 	}
 }
 
-// 创建日志收集任务
 func createTask(config types.CollectEntry) *task {
 	ctx, cancel := context.WithCancel(context.Background())
 	task := &task{

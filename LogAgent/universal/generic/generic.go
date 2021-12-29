@@ -1,15 +1,18 @@
 package generic
 
+import (
+	"LogAgent/universal/error"
+)
+
 const (
-	TryCloseWithMaxTime = 10 // 最大尝试关闭次数
+	TryCloseWithMaxTime = 10
 	TrySyncWithMaxTime  = 10
 )
 
-// FileUpdateMsg 文件更新channel通信包
 type FileUpdateMsg struct {
 	FileName    string
 	IsUnmarshal bool
+	Raw         error.RawErr
 }
 
-// ConfigFileUpdateChan 配置文件更新通知channel
 var ConfigFileUpdateChan = make(chan FileUpdateMsg)

@@ -1,6 +1,10 @@
 // Package codes: status code
 package codes
 
+import "fmt"
+
+type RawErr = error
+
 const (
 	Succeed             = iota + 10000
 	InitSettingsSucceed = iota + 11000
@@ -39,6 +43,7 @@ const (
 	InitInfluxDbFailed
 
 	KafkaConnectFailed = iota + 22000
+	KafkaCreateProducerFailed
 	KafkaSendFailed
 
 	NsqCreateProducerFailed = iota + 23000
@@ -58,6 +63,8 @@ const (
 	InfluxDbInsertFailed
 
 	SystemGetLocalIpFailed = iota + 26000
+
+	CollectorInitTaskFailed = iota + 27000
 )
 
 const (
@@ -66,12 +73,12 @@ const (
 
 var messages = map[uint64]string{
 	Succeed:             "SUCCESS",
-	InitSettingsSucceed: "Initialize the Settings module successfully",
-	InitLoggerSucceed:   "Initialize the Logger module successfully",
-	InitKafkaSucceed:    "Initialize the Kafka module successfully",
-	InitNsqSucceed:      "Initialize the Nsq module successfully",
-	InitEtcdSucceed:     "Initialize the Etcd module successfully",
-	InitInfluxDbSucceed: "Initialize the InfluxDb module successfully",
+	InitSettingsSucceed: "Initialize the Settings module successfully.",
+	InitLoggerSucceed:   "Initialize the Logger module successfully.",
+	InitKafkaSucceed:    "Initialize the Kafka module successfully.",
+	InitNsqSucceed:      "Initialize the Nsq module successfully.",
+	InitEtcdSucceed:     "Initialize the Etcd module successfully.",
+	InitInfluxDbSucceed: "Initialize the InfluxDb module successfully.",
 
 	KafkaConnectSucceed: "The Kafka module connects to Kafka service successfully",
 	KafkaSendSucceed:    "The Kafka module sends message to the Kafka service successfully",
@@ -99,8 +106,9 @@ var messages = map[uint64]string{
 	InitEtcdFailed:     "Initialize the Etcd module unsuccessfully!",
 	InitInfluxDbFailed: "Initialize the InfluxDb module unsuccessfully!",
 
-	KafkaConnectFailed: "The Kafka module connects to Kafka service unsuccessfully!",
-	KafkaSendFailed:    "The Kafka module sends message to the Kafka service unsuccessfully!",
+	KafkaConnectFailed:        "The Kafka module connects to Kafka service unsuccessfully!",
+	KafkaCreateProducerFailed: "The Kafka module creates sync-producer unsuccessfully!",
+	KafkaSendFailed:           "The Kafka module sends message to the Kafka service unsuccessfully!",
 
 	NsqCreateProducerFailed: "The Nsq module creates producer unsuccessfully!",
 	NsqPublishFailed:        "The Nsq module publishes message unsuccessfully!",
@@ -120,13 +128,22 @@ var messages = map[uint64]string{
 
 	SystemGetLocalIpFailed: "The System module gets local ip unsuccessfully!",
 
-	Unknown: "UNKNOWN",
+	CollectorInitTaskFailed: "The Collector module initializes tail-task unsuccessfully!",
+
+	Unknown: "Unknown!",
 }
 
 func Message(code uint64) string {
 	msg, isExist := messages[code]
 	if !isExist {
-		msg = "UNKNOWN"
+		msg = "Unknown!"
 	}
 	return msg
+}
+
+func MessageWithRaw(code uint64, raw RawErr) string {
+	if raw == nil {
+		return Message(code)
+	}
+	return fmt.Sprintf(Message(code)+" Err:%s", raw.Error())
 }
