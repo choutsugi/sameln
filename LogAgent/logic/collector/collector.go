@@ -62,7 +62,7 @@ func (t *task) run() {
 				Value: kafka.StringEncoder(line.Text),
 			}
 			kafka.Write(msg)
-			logger.L().Debugf("The Collector module's tail-task(%s) sends message to Kafka service successfully!", t.topic)
+			logger.L().Debugf("The Collector module's tail-task(%s) sends message to Kafka module successfully!", t.topic)
 		}
 	}
 }
