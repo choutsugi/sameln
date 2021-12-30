@@ -41,7 +41,7 @@ func Init(etcdConfig *settings.EtcdConfigType) *error.Error {
 }
 
 func PutConfig(key string) *error.Error {
-	ip, err := system.LocalIP()
+	ip, err := system.GetLocalIP()
 	if err != error.Null() {
 		return err
 	}
@@ -64,7 +64,7 @@ func GetConfig(key string) ([]types.CollectEntry, *error.Error) {
 	var entries []types.CollectEntry
 	var err *error.Error
 
-	ip, err := system.LocalIP()
+	ip, err := system.GetLocalIP()
 	if err != error.Null() {
 		logger.L().Errorf("The Etcd module gets local ip unsuccessfully! Error:%s", err.RawErr().Error())
 		return nil, error.NewError(err.RawErr(), codes.EtcdGetIpFailed)

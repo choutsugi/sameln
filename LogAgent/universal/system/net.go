@@ -4,19 +4,10 @@ import (
 	"LogAgent/universal/codes"
 	"LogAgent/universal/error"
 	"net"
-	"time"
+	"strings"
 )
 
-// LocalTime 获取本地时间（毫秒级）
-func LocalTime() string {
-	return time.Now().Local().Format("2006-01-02 15:04:05.000")
-}
-
-func UtcTime() string {
-	return time.Now().Local().Format("2006-01-02T15:04:05.000+0800")
-}
-
-func LocalIP() (ip string, err *error.Error) {
+func GetLocalIP() (ip string, err *error.Error) {
 	address, raw := net.InterfaceAddrs()
 	if raw != nil {
 		return "", error.NewError(raw, codes.SystemGetLocalIpFailed)
@@ -37,4 +28,16 @@ func LocalIP() (ip string, err *error.Error) {
 		return ip, error.Null()
 	}
 	return "", error.NewError(raw, codes.SystemGetLocalIpFailed)
+}
+
+func GetLocalIpByDial() (ip string, err *error.Error) {
+	conn, raw := net.Dial("udp", "8.8.8.8:80")
+	if raw != nil {
+		return
+	}
+	defer conn.Close()
+
+	addr := conn.LocalAddr().(*net.UDPAddr)
+	ip = strings.Split(addr.IP.String(), ":")[0]
+	return
 }

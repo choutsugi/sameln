@@ -63,6 +63,9 @@ const (
 	InfluxDbInsertFailed
 
 	SystemGetLocalIpFailed = iota + 26000
+	SystemGetCpuInfoFailed
+	SystemGetDiskInfoFailed
+	SystemGetMemoryInfoFailed
 
 	CollectorInitTaskFailed = iota + 27000
 )
@@ -126,7 +129,10 @@ var messages = map[uint64]string{
 	InfluxDbQueryFailed:        "The InfluxDb module query data unsuccessfully!",
 	InfluxDbInsertFailed:       "The InfluxDb module inserts data unsuccessfully!",
 
-	SystemGetLocalIpFailed: "The System module gets local ip unsuccessfully!",
+	SystemGetLocalIpFailed:    "The System module gets local-ip unsuccessfully!",
+	SystemGetCpuInfoFailed:    "The System module gets cpu-info unsuccessfully!",
+	SystemGetDiskInfoFailed:   "The System module gets disk-info unsuccessfully!",
+	SystemGetMemoryInfoFailed: "The System module gets memory-info unsuccessfully!",
 
 	CollectorInitTaskFailed: "The Collector module initializes tail-task unsuccessfully!",
 

@@ -3,12 +3,14 @@ package app
 import (
 	"LogAgent/logic/collector"
 	"LogAgent/logic/etcd"
+	"LogAgent/logic/influx"
 	"LogAgent/logic/kafka"
 	"LogAgent/logic/types"
 	"LogAgent/universal/error"
 	"LogAgent/universal/logger"
 	"LogAgent/universal/record"
 	"LogAgent/universal/settings"
+	"LogAgent/universal/system"
 	"LogAgent/universal/watch"
 	"time"
 )
@@ -43,16 +45,23 @@ func initialize() (err *error.Error) {
 	logger.L().Info("Initialize the Logger module successfully.")
 
 	if err = kafka.Init(settings.Config.Kafaka); err != error.Null() {
-		record.Error(err)
+		logger.L().Error(err.Info())
 		return
 	}
 	logger.L().Info("Initialize the Kafka module successfully.")
 
 	if err = etcd.Init(settings.Config.Etcd); err != error.Null() {
-		record.Error(err)
+		logger.L().Error(err.Info())
 		return
 	}
 	logger.L().Info("Initialize the Etcd module successfully.")
+
+	if err = influx.Init(settings.Config.InfluxDB); err != error.Null() {
+		logger.L().Error(err.Info())
+		return
+	}
+	logger.L().Info("Initialize the InfluxDb module successfully.")
+
 	return
 }
 
@@ -76,7 +85,19 @@ func server() {
 	go etcd.WatchConf(settings.Config.Etcd.CollectKey)
 	collector.Start(entries)
 
-	for {
-		time.Sleep(time.Second)
+	ticker := time.Tick(time.Second)
+
+	for _ = range ticker {
+		if info, err := system.GetCpuInfo(); err == error.Null() {
+			err = influx.InsertCpuInfo(info)
+		}
+
+		if info, err := system.GetMemoryInfo(); err == error.Null() {
+			err = influx.InsertMemInfo(info)
+		}
+
+		if info, err := system.GetDiskInfo(); err == error.Null() {
+			err = influx.InsertDiskInfo(info)
+		}
 	}
 }

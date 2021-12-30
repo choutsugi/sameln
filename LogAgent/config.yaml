@@ -26,7 +26,7 @@ nsq:
   chan_size: 100000
 
 influxDB:
-  addr: "127.0.0.1:8086"
+  addr: "http://localhost:8086"
   username: "admin"
   password: "123456"
   database: "system_status"

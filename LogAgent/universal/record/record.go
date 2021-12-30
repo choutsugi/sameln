@@ -3,8 +3,8 @@ package record
 
 import (
 	"LogAgent/universal/error"
-	"LogAgent/universal/system"
 	"fmt"
+	"time"
 )
 
 // 控制台打印级别
@@ -14,6 +14,14 @@ const (
 	FATAL = "FATAL"
 	WARN  = "WARN"
 )
+
+func localTime() string {
+	return time.Now().Local().Format("2006-01-02 15:04:05.000")
+}
+
+func utcTime() string {
+	return time.Now().Local().Format("2006-01-02T15:04:05.000+0800")
+}
 
 func log(stat string, args ...interface{}) {
 	var info string
@@ -32,11 +40,11 @@ func log(stat string, args ...interface{}) {
 		return
 	}
 
-	fmt.Printf("%s\t%s\t%s\n", system.UtcTime(), stat, info)
+	fmt.Printf("%s\t%s\t%s\n", utcTime(), stat, info)
 }
 
 func logError(info string, err error.RawErr, stack string) {
-	fmt.Printf("TIME: %s\t %s: %s\t RAW_ERR: %s\t CALL_STACK: %s\n", system.LocalTime(), ERROR, info, err, stack)
+	fmt.Printf("TIME: %s\t %s: %s\t RAW_ERR: %s\t CALL_STACK: %s\n", utcTime(), ERROR, info, err, stack)
 }
 
 // Info 控制台打印提示信息
