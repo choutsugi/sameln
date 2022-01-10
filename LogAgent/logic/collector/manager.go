@@ -5,6 +5,7 @@ import (
 	"LogAgent/universal/error"
 	"LogAgent/universal/logger"
 	"go.uber.org/atomic"
+	"time"
 )
 
 type taskManager struct {
@@ -84,6 +85,7 @@ func (mgr *taskManager) watch() {
 						if t.ins.Stop() == nil {
 							break
 						}
+						time.Sleep(time.Second)
 					}
 				}(t)
 				delete(mgr.tasks, t.path)
