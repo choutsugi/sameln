@@ -42,6 +42,7 @@ type NsqConfigType struct {
 }
 
 type InfluxDbConfigType struct {
+	Active    bool   `mapstructure:"active"`
 	Addr      string `mapstructure:"addr"`
 	Username  string `mapstructure:"username"`
 	Password  string `mapstructure:"password"`

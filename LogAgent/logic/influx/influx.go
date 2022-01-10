@@ -15,6 +15,7 @@ var (
 	cli         client.Client
 	config      client.BatchPointsConfig
 	initialized atomic.Bool
+	activated   atomic.Bool
 )
 
 func Init(influxConfig *settings.InfluxDbConfigType) (err *error.Error) {
@@ -22,6 +23,11 @@ func Init(influxConfig *settings.InfluxDbConfigType) (err *error.Error) {
 		logger.L().Errorf("The InfluxDb module unable to re-initialize!")
 		return error.NewError(nil, codes.InitInfluxDbFailed)
 	}
+
+	if influxConfig.Active {
+		activated.Store(true)
+	}
+
 	var raw error.RawErr
 	cli, raw = client.NewHTTPClient(client.HTTPConfig{
 		Addr: influxConfig.Addr,
@@ -58,6 +64,9 @@ func Query(cmd string) (ret []client.Result, err *error.Error) {
 }
 
 func InsertCpuInfo(info *system.CpuInfo) *error.Error {
+	if !activated.Load() {
+		return error.Null()
+	}
 	points, raw := client.NewBatchPoints(config)
 	if raw != nil {
 		logger.L().Errorf("The InfluxDb module inserts data unsuccessfully! Error:%s", raw.Error())
@@ -86,6 +95,9 @@ func InsertCpuInfo(info *system.CpuInfo) *error.Error {
 }
 
 func InsertMemInfo(info *system.MemoryInfo) *error.Error {
+	if !activated.Load() {
+		return error.Null()
+	}
 	points, raw := client.NewBatchPoints(config)
 	if raw != nil {
 		logger.L().Errorf("The InfluxDb module inserts data unsuccessfully! Error:%s", raw.Error())
@@ -119,6 +131,9 @@ func InsertMemInfo(info *system.MemoryInfo) *error.Error {
 }
 
 func InsertDiskInfo(info *system.DiskInfo) *error.Error {
+	if !activated.Load() {
+		return error.Null()
+	}
 	points, raw := client.NewBatchPoints(config)
 	if raw != nil {
 		logger.L().Errorf("The InfluxDb module inserts data unsuccessfully! Error:%s", raw.Error())
@@ -156,6 +171,9 @@ func InsertDiskInfo(info *system.DiskInfo) *error.Error {
 }
 
 func InsertNetInfo() (err *error.Error) {
+	if !activated.Load() {
+		return error.Null()
+	}
 	points, raw := client.NewBatchPoints(config)
 	if raw != nil {
 		logger.L().Errorf("The InfluxDb module inserts data unsuccessfully! Error:%s", raw.Error())

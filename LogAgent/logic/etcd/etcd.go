@@ -55,7 +55,7 @@ func PutConfig(key string) *error.Error {
 		logger.L().Errorf("The Etcd module sets config(%s) unsuccessfully! Error:%s", key, raw.Error())
 		return error.NewError(raw, codes.EtcdSetConfigFailed)
 	}
-	//logger.L().Infof("The Etcd module sets config(%s) successfully!", key)
+	logger.L().Infof("The Etcd module sets config(%s) successfully!", key)
 
 	return error.Null()
 }

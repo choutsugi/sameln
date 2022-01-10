@@ -10,7 +10,6 @@ import (
 	"LogAgent/universal/logger"
 	"LogAgent/universal/record"
 	"LogAgent/universal/settings"
-	"LogAgent/universal/system"
 	"LogAgent/universal/watch"
 	"time"
 )
@@ -85,19 +84,20 @@ func server() {
 	go etcd.WatchConf(settings.Config.Etcd.CollectKey)
 	collector.Start(entries)
 
-	ticker := time.Tick(time.Second)
+	ticker := time.Tick(time.Millisecond * 250)
 
 	for _ = range ticker {
-		if info, err := system.GetCpuInfo(); err == error.Null() {
-			err = influx.InsertCpuInfo(info)
-		}
-
-		if info, err := system.GetMemoryInfo(); err == error.Null() {
-			err = influx.InsertMemInfo(info)
-		}
-
-		if info, err := system.GetDiskInfo(); err == error.Null() {
-			err = influx.InsertDiskInfo(info)
-		}
+		// Disable collect system info.
+		//if info, err := system.GetCpuInfo(); err == error.Null() {
+		//	err = influx.InsertCpuInfo(info)
+		//}
+		//
+		//if info, err := system.GetMemoryInfo(); err == error.Null() {
+		//	err = influx.InsertMemInfo(info)
+		//}
+		//
+		//if info, err := system.GetDiskInfo(); err == error.Null() {
+		//	err = influx.InsertDiskInfo(info)
+		//}
 	}
 }

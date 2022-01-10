@@ -57,7 +57,6 @@ func Init(config *settings.LogConfigType, mode string) *error.Error {
 	return error.Null()
 }
 
-// L zap.SugaredLogger
 func L() *zap.SugaredLogger {
 	return log
 }

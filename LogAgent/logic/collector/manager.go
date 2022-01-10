@@ -59,15 +59,15 @@ func (mgr *taskManager) watch() {
 			}
 			task := createTask(conf)
 			if err := task.init(); err != error.Null() {
-				logger.L().Errorf("The Collector module initializes tail-task(%s) unsuccessfully!", task.topic)
+				logger.L().Errorf("The Collector module initializes tail-t(%s) unsuccessfully!", task.topic)
 				continue
 			}
 			mgr.tasks[task.path] = task
-			logger.L().Infof("The Collector module initializes tail-task(%s) successfully and ready to start.", task.topic)
+			logger.L().Infof("The Collector module initializes tail-t(%s) successfully and ready to start.", task.topic)
 			go task.run()
 		}
 
-		for key, task := range mgr.tasks {
+		for key, t := range mgr.tasks {
 			var isExist bool
 			for _, entry := range entries {
 				if key == entry.Path {
@@ -76,9 +76,17 @@ func (mgr *taskManager) watch() {
 				}
 			}
 			if !isExist {
-				logger.L().Infof("The Collector module's tail-task(%s) is ready to stop.", task.topic)
-				task.cancel()
-				delete(mgr.tasks, task.path)
+				logger.L().Infof("The Collector module's tail-t(%s) is ready to stop.", t.topic)
+				t.cancel()
+				t.ins.Cleanup()
+				go func(t *task) {
+					for {
+						if t.ins.Stop() == nil {
+							break
+						}
+					}
+				}(t)
+				delete(mgr.tasks, t.path)
 			}
 		}
 	}
